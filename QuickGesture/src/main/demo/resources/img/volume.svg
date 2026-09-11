@@ -1,0 +1,7 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- 喇叭主体 -->
+  <path d="M12 24h10l14-12v40L22 40H12a2 2 0 0 1-2-2V26a2 2 0 0 1 2-2z" fill="#333"/>
+  <!-- 声波 -->
+  <path d="M42 22c3 3 5 7 5 10s-2 7-5 10" stroke="#333" stroke-width="3" stroke-linecap="round" fill="none"/>
+  <path d="M48 16c5 5 8 11 8 16s-3 11-8 16" stroke="#333" stroke-width="3" stroke-linecap="round" fill="none"/>
+</svg>

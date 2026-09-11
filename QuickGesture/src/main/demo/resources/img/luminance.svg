@@ -1,0 +1,15 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- 太阳中心 -->
+  <circle cx="32" cy="32" r="10" fill="#F5A623"/>
+  <!-- 光线 -->
+  <g stroke="#F5A623" stroke-width="3" stroke-linecap="round">
+    <line x1="32" y1="6"  x2="32" y2="14"/>
+    <line x1="32" y1="50" x2="32" y2="58"/>
+    <line x1="6"  y1="32" x2="14" y2="32"/>
+    <line x1="50" y1="32" x2="58" y2="32"/>
+    <line x1="13.6" y1="13.6" x2="19.3" y2="19.3"/>
+    <line x1="44.7" y1="44.7" x2="50.4" y2="50.4"/>
+    <line x1="13.6" y1="50.4" x2="19.3" y2="44.7"/>
+    <line x1="44.7" y1="19.3" x2="50.4" y2="13.6"/>
+  </g>
+</svg>
