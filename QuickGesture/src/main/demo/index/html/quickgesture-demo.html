@@ -21,266 +21,115 @@
   <title>QuickGesture - Launcher Demo</title>
   <link rel="stylesheet" href="../css/styles.css">
   <style>
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
-      background: #0a0a0a;
-      color: #e0e0e0;
-      min-height: 100vh;
-      overflow-x: hidden;
+    body{
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      background-color: #000;
     }
-
-    .navbar {
+    .main{
+      width: 100%;
+      height: 1600px;
+      padding: 0;
+      margin: 0;
+      box-sizing: border-box;
+    }
+    .navbar{
+      width: 100%;
+      height: 10vh;
       position: fixed;
-      top: 0; left: 0; right: 0;
-      height: 56px;
+      top: 0;
+      left: 0;
+      z-index: 1000;
+      background-color: #000;
+      display: flex;
+      justify-content: space-between;
+    }
+    .brand{
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 24px;
-      background: rgba(10, 10, 10, 0.7);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-      z-index: 100;
     }
-
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      text-decoration: none;
-      color: #ffffff;
-      font-weight: 700;
-      font-size: 18px;
-      letter-spacing: -0.3px;
+    .logo{
+      height: 80%;
+      aspect-ratio: 1/1;
+      background-image: url(../../resources/img/icon.svg);
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
     }
-
-    .logo-icon {
-      width: 32px;
-      height: 32px;
-      border-radius: 8px;
-      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    .name{
+      color: white;
+      font-size: 2vh;
+    }
+    .phone{
+      width: 100%;
+      height: 1600px;
       display: flex;
-      align-items: center;
       justify-content: center;
-      font-size: 16px;
-      color: #fff;
-      font-weight: 800;
-      box-shadow: 0 2px 8px rgba(99, 102, 241, 0.4);
-    }
+      align-items: center;
 
-    .nav-links {
+    }
+    .nav-item div{
+      color: #cfcfcf;
+    }
+    .nav-item{
       display: flex;
       align-items: center;
+      justify-content: space-between;
       gap: 20px;
     }
-
-    .nav-links a {
-      color: #a0a0a0;
-      text-decoration: none;
-      font-size: 14px;
-      transition: color 0.2s;
-    }
-
-    .nav-links a:hover { color: #ffffff; }
-
-    .github-link {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      color: #a0a0a0 !important;
-      padding: 6px 14px;
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 8px;
-      transition: all 0.2s;
-    }
-
-    .github-link:hover {
-      color: #ffffff !important;
-      border-color: rgba(255, 255, 255, 0.3);
-      background: rgba(255, 255, 255, 0.06);
-    }
-
-    .github-link svg { width: 18px; height: 18px; fill: currentColor; }
-
-    /* ========== 主内容布局 ========== */
-    .main {
-      padding-top: 56px;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding-bottom: 60px;
-    }
-
-    .page-title {
-      text-align: center;
-      padding: 40px 20px 20px;
-      width: 100%;
-    }
-
-    .page-title h1 {
-      font-size: 28px;
-      font-weight: 700;
-      color: #ffffff;
-      margin-bottom: 8px;
-      letter-spacing: -0.5px;
-    }
-
-    .page-title p {
-      font-size: 15px;
-      color: #666;
-    }
-
-    /* ========== 全屏 iframe 容器 ========== */
-    .fullscreen-iframe-wrapper {
-      width: 100%;
-      flex: 1;
-      min-height: 600px;
-      height: calc(100vh - 200px); /* 减去标题和底部提示的高度 */
-      padding: 0 20px 20px;
-      position: relative;
-    }
-
-    .fullscreen-iframe-wrapper iframe {
-      display: block;
-      width: 100%;
-      height: 100%;
-      border: none;
-      border-radius: 16px;
-      background: #000;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
-    }
-
-    /* 底部提示信息 */
-    .hint {
-      margin-top: 24px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 10px 20px;
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      border-radius: 100px;
-      font-size: 13px;
-      color: #666;
-    }
-
-    .hint svg {
-      width: 16px;
-      height: 16px;
-      fill: #6366f1;
-      flex-shrink: 0;
-    }
-
-    .footer-note {
-      margin-top: 16px;
-      font-size: 12px;
-      color: #333;
-      text-align: center;
-      padding-bottom: 20px;
-    }
-
-    /* ========== 移除手机模型相关样式 ========== */
-    .phone-wrapper,
-    .phone-frame,
-    .phone-screen,
-    .screen-placeholder {
-      display: none;
-    }
-
-    /* ========== 响应式 ========== */
-    @media (max-width: 768px) {
-      .fullscreen-iframe-wrapper {
-        min-height: 400px;
-        height: 1600px;
-        padding: 0 12px 12px;
-      }
-      .fullscreen-iframe-wrapper iframe {
-        border-radius: 12px;
-      }
-      .page-title h1 { font-size: 22px; }
-      .page-title { padding: 30px 16px 16px; }
-    }
-
-    @media (max-width: 480px) {
-      .nav-links a:not(.github-link) { display: none; }
-      .fullscreen-iframe-wrapper {
-        min-height: 300px;
-        height: 1600px;
-        padding: 0 8px 8px;
-      }
-      .fullscreen-iframe-wrapper iframe {
-        border-radius: 8px;
-      }
-      .page-title h1 { font-size: 18px; }
-      .page-title p { font-size: 13px; }
-      .hint { font-size: 12px; padding: 8px 16px; }
+    .nav-item div:hover{
+      color: white;
     }
   </style>
 </head>
 <body>
-
-  <nav class="navbar">
-    <a href="#" class="logo">
-      <div class="logo-icon">Q</div>
-      <span>QuickGesture</span>
-    </a>
-    <div class="nav-links">
-      <a href="#">Demo</a>
-      <a href="#">文档</a>
-      <a href="#">API</a>
-      <a href="https://github.com/your-username/quickgesture" class="github-link" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
-        <span>GitHub</span>
-      </a>
-    </div>
-  </nav>
-
-  <main class="main">
-    <div class="page-title">
-      <h1>QuickGesture example</h1>
-      <p>体验丝滑的 Android Quickstep 风格手势导航</p>
-    </div>
-
-    <!-- 全屏 iframe 容器 -->
-    <!-- <div class="fullscreen-iframe-wrapper">
-      <iframe src="../html/index.html" frameborder="0"></iframe>
-    </div> -->
-    <!-- phone -->
-        <div id="drag-block">
-            <div id="product">
-                <div id="desktop">
-                    <!-- <qs-grid id="desktop-app-grid" rows="7" gap="30px">
-                
-                    </qs-grid> -->
-                </div>
-                
-                
-                <div id="shade"></div>
-                <div id="status-and-nav-view">
-                    
-                    <div id="top-status-bar">
-                        <div id="front-camera"></div>
-                        <span id="statusbar-time"></span>
-                        <div id="statusbar-info"></div>
-                    </div>
-                    <div id="center-placeholder"></div>
-                    <div id="bottom-nav-bar"></div>
-                </div>
-                <div id="set-page"></div>
-            </div>
+  <div class="main">
+    <div class="navbar">
+      <div class="brand">
+        <div class="logo">
         </div>
-    <p class="hint">
-      <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
-      提示：使用鼠标拖拽，或开启浏览器移动端模式体验手势交互
-    </p>
-
-    <p class="footer-note">推荐使用 Chrome / Edge 浏览器，按 F12 开启设备模拟模式获得最佳体验</p>
-  </main>
-
+        <div class="name">The QuickGesture of JavaScript</div>
+      </div>
+      
+      <div class="nav-item">
+        <div class="git-link name">github</div>
+        <div class="doc name">docment</div>
+        <div class="home name">home</div>
+        <div class="more name">more</div>
+      </div>
+      
+    </div>
+    <div class="spacer" style="height: 10vh;"></div>
+    <div class="phone">
+      <!-- phone -->
+      <div id="drag-block">
+          <div id="product">
+              <div id="desktop">
+                  <!-- <qs-grid id="desktop-app-grid" rows="7" gap="30px">
+              
+                  </qs-grid> -->
+              </div>
+              
+              
+              <div id="shade"></div>
+              <div id="status-and-nav-view">
+                  
+                  <div id="top-status-bar">
+                      <div id="front-camera"></div>
+                      <span id="statusbar-time"></span>
+                      <div id="statusbar-info"></div>
+                  </div>
+                  <div id="center-placeholder"></div>
+                  <div id="bottom-nav-bar"></div>
+              </div>
+              <div id="set-page"></div>
+          </div>
+      </div>
+    </div>
+    <div class="bottombar"></div>
+  </div>
 </body>
     <script src="../js/data.js"></script>
     <script src="../js/productConfig.js"></script>
@@ -327,16 +176,16 @@
                 setDesktopPage('right');
             }
         });
-        snackBar('welcome using Quick Gesture', '../packages/apps/MyApp/com/quickStepJs/myApp/res/ic_launcher.jpg', product, 'snack-bar', 3000);
+        snackBar('welcome using Quick Gesture', '../packages/apps/MyApp/com/quickStepJs/myApp/res/ic_launcher.svg', product, 'snack-bar', 3000);
         setTimeout(() => {
             noticeBanner(`<div class="banner">
-      <img src="../packages/apps/Settings/com/quickStepJs/settings/res/ic_launcher.jpg" alt="" width="50px" height="50px">
+      <img src="../packages/apps/Settings/com/quickStepJs/settings/res/ic_launcher.svg" alt="" width="50px" height="50px">
       <span>Welcome using Quick Gesture os</span>
     </div>`, product, 3000, historyInfo);
         }, 3000);
         setTimeout(() => {
             noticeBanner(`<div class="banner">
-      <img src="../packages/apps/Settings/com/quickStepJs/settings/res/ic_launcher.jpg" alt="" width="50px" height="50px">
+      <img src="../packages/apps/Settings/com/quickStepJs/settings/res/ic_launcher.svg" alt="" width="50px" height="50px">
       <span>Quick Gesture is ready</span>
     </div>`, product, 3000, historyInfo);
         }, 4000);

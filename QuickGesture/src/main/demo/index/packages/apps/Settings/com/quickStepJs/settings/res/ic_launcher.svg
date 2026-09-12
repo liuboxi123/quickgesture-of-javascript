@@ -1,0 +1,60 @@
+<svg width="530" height="530" viewBox="0 0 530 530" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="hexGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e5bc6" />
+      <stop offset="100%" stop-color="#0d3685" />
+    </linearGradient>
+    
+    <filter id="innerShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="4" result="blur"/>
+      <feOffset dx="2" dy="4" result="offsetBlur"/>
+      <feComposite in="SourceGraphic" in2="offsetBlur" operator="over"/>
+    </filter>
+  </defs>
+
+  <path d="M 256 20 
+           L 473.8 146 
+           L 473.8 396 
+           L 256 522 
+           L 38.2 396 
+           L 38.2 146 Z" 
+        fill="url(#hexGrad)" 
+        stroke="#0b2a66" 
+        stroke-width="2" />
+
+  <path d="M 256 45 
+           L 452 159.5 
+           L 452 382.5 
+           L 256 497 
+           L 60 382.5 
+           L 60 159.5 Z" 
+        fill="#124294" 
+        stroke="#0a255c" 
+        stroke-width="2" />
+  <path d="M 115 375 
+           C 160 200, 220 100, 300 280 
+           C 350 390, 360 200, 385 165" 
+        fill="none" 
+        stroke="#2de2e6" 
+        stroke-width="18" 
+        stroke-linecap="round" 
+        stroke-linejoin="round" />
+
+  <circle cx="115" cy="375" r="14" fill="#2de2e6" />
+  <circle cx="200" cy="218" r="14" fill="#2de2e6" /> 
+  <circle cx="385" cy="165" r="14" fill="#2de2e6" />
+
+  <path d="M 105 155 L 105 185 L 135 185" 
+        fill="none" 
+        stroke="#2de2e6" 
+        stroke-width="12" 
+        stroke-linecap="round" 
+        stroke-linejoin="round" />
+        
+  <path d="M 407 385 L 407 355 L 377 355" 
+        fill="none" 
+        stroke="#2de2e6" 
+        stroke-width="12" 
+        stroke-linecap="round" 
+        stroke-linejoin="round" />
+</svg>

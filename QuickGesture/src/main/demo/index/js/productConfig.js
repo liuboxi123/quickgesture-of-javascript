@@ -62,12 +62,12 @@ columnOfShowAppInDesktop = '5' /* number */; // 5 recommend
  * Installed app list
  */
 // appList.push(new AppInfo());
-appList.push(new AppInfo("com.quickStepJs.myapp", '../packages/apps/MyApp/com/quickStepJs/myApp/res/ic_launcher.jpg', 'MyApp', 1, 1, 2, 2, 1));
-appList.push(new AppInfo("com.quickStepJs.camera", '../packages/apps/Camera/com/quickStepJs/camera/res/ic_launcher.jpg', 'Camera', 3, 1, 1, 1, 1));
-appList.push(new AppInfo("com.quickStepJs.calendar", '../packages/apps/Calendar/com/quickStepJs/calendar/res/ic_launcher.jpg', 'Calendar', 4, 1, 1, 1, 2));
-appList.push(new AppInfo("com.quickStepJs.email", '../packages/apps/Email/com/quickStepJs/email/res/ic_launcher.jpg', 'Email', 5, 1, 1, 1, 2));
-appList.push(new AppInfo("com.quickStepJs.gallery", '../packages/apps/Gallery/com/quickStepJs/gallery/res/ic_launcher.jpg', 'Gallery', 3, 2, 1, 1, 3));
-appList.push(new AppInfo("com.quickStepJs.settings", '../packages/apps/Settings/com/quickStepJs/settings/res/ic_launcher.jpg', 'Settings', 1, 3, 2, 1, 2));
+appList.push(new AppInfo("com.quickStepJs.myapp", '../packages/apps/MyApp/com/quickStepJs/myApp/res/ic_launcher.svg', 'MyApp', 1, 1, 2, 2, 1));
+appList.push(new AppInfo("com.quickStepJs.camera", '../packages/apps/Camera/com/quickStepJs/camera/res/ic_launcher.svg', 'Camera', 3, 1, 1, 1, 1));
+appList.push(new AppInfo("com.quickStepJs.calendar", '../packages/apps/Calendar/com/quickStepJs/calendar/res/ic_launcher.svg', 'Calendar', 4, 1, 1, 1, 2));
+appList.push(new AppInfo("com.quickStepJs.email", '../packages/apps/Email/com/quickStepJs/email/res/ic_launcher.svg', 'Email', 5, 1, 1, 1, 2));
+appList.push(new AppInfo("com.quickStepJs.gallery", '../packages/apps/Gallery/com/quickStepJs/gallery/res/ic_launcher.svg', 'Gallery', 3, 2, 1, 1, 3));
+appList.push(new AppInfo("com.quickStepJs.settings", '../packages/apps/Settings/com/quickStepJs/settings/res/ic_launcher.svg', 'Settings', 1, 3, 2, 1, 2));
 
 /**
  * Running app list auto add 
@@ -154,6 +154,7 @@ const configReady = (async () => {
     console.log('StatusBarConfig ready:', statusBarConfig);
     return statusBarConfig;
 })();
+
 configReady.then(() => {
     setStatusBar(true);
 });
