@@ -83,7 +83,7 @@ class Grid extends HTMLElement{
 /**
  * liquid glass 
  */
-class QSLiquidGlass extends HTMLElement {
+class qgLiquidGlass extends HTMLElement {
     constructor() {
         super();
         const shadow = this.attachShadow({ mode: 'open' });
@@ -96,23 +96,23 @@ class QSLiquidGlass extends HTMLElement {
                 border-radius: 20px;
                 width: 300px;
                 height: 200px;
-                --qs-glass-bg: rgba(255, 255, 255, 0.08);
-                --qs-glass-border: rgba(255, 255, 255, 0.2);
-                --qs-glass-highlight: rgba(255, 255, 255, 0.35);
-                --qs-glass-shadow: rgba(0, 0, 0, 0.25);
-                --qs-liquid-speed: 8s;
-                --qs-radius: inherit;
+                --qg-glass-bg: rgba(255, 255, 255, 0.08);
+                --qg-glass-border: rgba(255, 255, 255, 0.2);
+                --qg-glass-highlight: rgba(255, 255, 255, 0.35);
+                --qg-glass-shadow: rgba(0, 0, 0, 0.25);
+                --qg-liquid-speed: 8s;
+                --qg-radius: inherit;
             }
 
             .glass-panel {
                 position: relative;
                 width: 100%;
                 height: 100%;
-                border-radius: var(--qs-radius, inherit);
-                background: var(--qs-glass-bg);
+                border-radius: var(--qg-radius, inherit);
+                background: var(--qg-glass-bg);
                 backdrop-filter: blur(24px) saturate(1.4);
                 -webkit-backdrop-filter: blur(24px) saturate(1.4);
-                border: 1px solid var(--qs-glass-border);
+                border: 1px solid var(--qg-glass-border);
                 box-shadow:
                     0 8px 32px rgba(0, 0, 0, 0.3),
                     0 2px 8px rgba(0, 0, 0, 0.2),
@@ -275,9 +275,9 @@ class QSLiquidGlass extends HTMLElement {
         this._syncRadius = () => {
             const computedRadius = getComputedStyle(this).borderRadius;
             if (computedRadius && computedRadius !== '0px') {
-                container.style.setProperty('--qs-radius', computedRadius);
+                container.style.setProperty('--qg-radius', computedRadius);
             } else {
-                container.style.setProperty('--qs-radius', '20px');
+                container.style.setProperty('--qg-radius', '20px');
             }
         };
     }
@@ -301,7 +301,7 @@ class QSLiquidGlass extends HTMLElement {
 /**
  * slider
  */
-class QsSlider extends HTMLElement {
+class qgSlider extends HTMLElement {
   static get observedAttributes() { return ['value', 'max', 'orientation']; }
 
   constructor() {
@@ -377,7 +377,7 @@ class QsSlider extends HTMLElement {
           top: 0; left: 0; bottom: 0;
           width: 50%;
           border-radius: 0px;
-          background: var(--qs-fill, rgba(255,255,255,0.9));
+          background: var(--qg-fill, rgba(255,255,255,0.9));
           transition: width 0.06s linear;
           will-change: width;
         }
@@ -401,7 +401,7 @@ class QsSlider extends HTMLElement {
           left: 0; right: 0; bottom: 0;
           height: 50%;
           border-radius: 0px;
-          background: var(--qs-fill, rgba(255,255,255,0.9));
+          background: var(--qg-fill, rgba(255,255,255,0.9));
           transition: height 0.06s linear;
           will-change: height;
         }
@@ -548,19 +548,19 @@ class QsSlider extends HTMLElement {
  * Components defind
  */
 // fast grid container
-customElements.define('qs-grid', Grid);
-/* <qs-grid cols="5" rows="7" gap="15px" padding="30px"></qs-grid> */
+customElements.define('qg-grid', Grid);
+/* <qg-grid cols="5" rows="7" gap="15px" padding="30px"></qg-grid> */
 // liquid-glass
-customElements.define('qs-liquid-glass', QSLiquidGlass);
-/* <qs-liquid-glass>
+customElements.define('qg-liquid-glass', qgLiquidGlass);
+/* <qg-liquid-glass>
     <div>
         <small>liquid glass</small>
     </div>
-</qs-liquid-glass> */
+</qg-liquid-glass> */
 // slider
-customElements.define('qs-slider', QsSlider);
-{/* <qs-slider orientation="vertical" id="volume" value="40" max="100">
+customElements.define('qg-slider', qgSlider);
+{/* <qg-slider orientation="vertical" id="volume" value="40" max="100">
     <svg slot="icon" viewBox="0 0 24 24" fill="#000">
         <path d="..."/>
     </svg>
-</qs-slider> */}
+</qg-slider> */}
