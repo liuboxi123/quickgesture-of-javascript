@@ -25,7 +25,7 @@
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      background-color: #000;
+      background-color: white;
     }
     .main{
       width: 100%;
@@ -41,7 +41,9 @@
       top: 0;
       left: 0;
       z-index: 1000;
-      background-color: #000;
+      background-color: rgba(255, 255, 255, 0.182);
+      backdrop-filter: blur(10px);                 
+      -webkit-backdrop-filter: blur(10px); 
       display: flex;
       justify-content: space-between;
     }
@@ -59,16 +61,8 @@
       background-repeat: no-repeat;
     }
     .name{
-      color: white;
+      color: rgb(113, 113, 113);
       font-size: 2vh;
-    }
-    .phone{
-      width: 100%;
-      height: 1600px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-
     }
     .nav-item div{
       color: #cfcfcf;
@@ -78,9 +72,18 @@
       align-items: center;
       justify-content: space-between;
       gap: 20px;
+      padding-left: 5%;
+      padding-right: 5%;
     }
     .nav-item div:hover{
-      color: white;
+      color: rgb(10, 10, 10);
+    }
+    .components{
+      /* width: 100vw; */
+      float: left;
+    }
+    .component{
+      margin: 10px;
     }
   </style>
 </head>
@@ -88,106 +91,42 @@
   <div class="main">
     <div class="navbar">
       <div class="brand">
-        <div class="logo">
-        </div>
+        <div class="logo"></div>
         <div class="name">The QuickGesture of JavaScript</div>
       </div>
       
       <div class="nav-item">
-        <div class="git-link name">github</div>
-        <div class="doc name">docment</div>
-        <div class="home name">home</div>
-        <div class="more name">more</div>
+        <div class="git-link name">Github</div>
+        <div class="doc name">Docment</div>
+        <div class="home name">Home</div>
+        <div class="more name">More</div>
       </div>
       
     </div>
     <div class="spacer" style="height: 10vh;"></div>
-    <div class="phone">
-      <!-- phone -->
-      <div id="drag-block">
-          <div id="product">
-              <div id="desktop">
-                  <!-- <qs-grid id="desktop-app-grid" rows="7" gap="30px">
-              
-                  </qs-grid> -->
+    <div class="components">
+      <div class="component">
+          <qg-app-card fold="true" id="app-card">
+            <div slot="icon" id="icon">
+              <div id="app-card-icon">
+                <h1>Fold card</h1>
               </div>
-              
-              
-              <div id="shade"></div>
-              <div id="status-and-nav-view">
-                  
-                  <div id="top-status-bar">
-                      <div id="front-camera"></div>
-                      <span id="statusbar-time"></span>
-                      <div id="statusbar-info"></div>
-                  </div>
-                  <div id="center-placeholder"></div>
-                  <div id="bottom-nav-bar"></div>
-              </div>
-              <div id="set-page"></div>
-          </div>
+            </div>
+            <div style="padding:20px;">
+              <div id="app-card-return-btn">Fold</div>
+              <h1 id="title">Unfold Card</h1>
+            </div>
+          </qg-app-card>
       </div>
     </div>
     <div class="bottombar"></div>
   </div>
 </body>
-    <script src="../js/data.js"></script>
-    <script src="../js/productConfig.js"></script>
-    <script src="../js/settings.js"></script>
-    <script src="../js/typeEnum.js"></script>
-    <script src="../js/index.js"></script>
-    <script src="../js/components.js"></script>
+    <!-- <script src="../../../core/index.js"></script> -->
+     <script src="../js/index.js"></script>
+    <script src="../js/first-page.js"></script>
+    <script type="module" src="../../../core/components.js"></script>
     <script>
-        const app = document.getElementById('app');
-        isShowStatusBar(true);
-        // isShowShade(true);
-        initInstalledApp(appList);
-        openAppListener();
-        checkSingleFingerSlideUpwardEvent(bottomNavBar, (e) => {
-            // console.log('single finger slide upware');
-            // alert('single finger slide upware');
-        }, 0.1, true);
-       
-        setInterval(() => {setStatusBar()}, 1000);
-
-        splitUpwardInBottomNav(runningAppList, bottomNavBar, true);
-
-        gestureListener(statusBar, {
-            slowSwipeDown: () => handleStatusBarSlideDown(),
-            quickSwipeDown:  () => handleStatusBarSlideDown(),
-            slowSwipeUp: () => handleStatusBarSlideUp(),
-            quickSwipeUp: () => handleStatusBarSlideUp()
-        });
-        gestureListener(desktop, {
-            slowSwipeLeft: () => {
-                console.log('left');
-                setDesktopPage('left');
-            },
-            slowSwipeRight: () => {
-                console.log('right');
-                setDesktopPage('right');
-            },
-            quickSwipeLeft: () => {
-                console.log('quickSwipeLeft');
-                setDesktopPage('left');
-            },
-            quickSwipeRight: () => {
-                console.log('right');
-                setDesktopPage('right');
-            }
-        });
-        snackBar('welcome using Quick Gesture', '../packages/apps/MyApp/com/quickStepJs/myApp/res/ic_launcher.svg', product, 'snack-bar', 3000);
-        setTimeout(() => {
-            noticeBanner(`<div class="banner">
-      <img src="../packages/apps/Settings/com/quickStepJs/settings/res/ic_launcher.svg" alt="" width="50px" height="50px">
-      <span>Welcome using Quick Gesture os</span>
-    </div>`, product, 3000, historyInfo);
-        }, 3000);
-        setTimeout(() => {
-            noticeBanner(`<div class="banner">
-      <img src="../packages/apps/Settings/com/quickStepJs/settings/res/ic_launcher.svg" alt="" width="50px" height="50px">
-      <span>Quick Gesture is ready</span>
-    </div>`, product, 3000, historyInfo);
-        }, 4000);
+      
     </script>
 </html>

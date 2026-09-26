@@ -12,11 +12,43 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. 
  */
-
-
+import { gestureListenerExp } from './index-export.js';
+import { elUnfoldAnimationExp, elFoldAnimationExp } from './index-export.js';
+import { addEaseAnimationExp } from './index-export.js';
 /**
  * Components suport
  */
+/**
+ * Quick Gesture Web Components(Components template)
+ */
+class QGComponent extends HTMLElement {
+  static get observedAttributes() { // add the attr of label
+    return ['height', 'width'];
+  }
+  constructor() {
+    super();
+    this.attachShadow({ mode: 'open' });
+    this.shadowRoot.innerHTML = `
+      <style>
+        /* style of label */
+      </style>
+    `;
+  }
+  attributeChangedCallback(name, oldValue, newValue) { // function when attr of label changed
+    if (oldValue !== newValue) {
+      this._jsFunction();
+    }
+  }
+  _jsFunction() {
+    // function what you want
+  }
+  get getLabelAttr() {
+    return this.getAttribute('attr');
+  }
+  set setAttrOfLabel(attr) {
+    this.setAttribute('attr', attr);
+  }
+}
 /**
  * fast grid container 
  */
@@ -545,6 +577,121 @@ class qgSlider extends HTMLElement {
 }
 
 /**
+ * app card
+ */
+class qgAppCard extends HTMLElement {
+  static get observedAttributes() {
+    return ['height', 'width', 'fold'];
+  }
+
+  constructor() {
+    super();
+    this.attachShadow({ mode: 'open' });
+    this.shadowRoot.innerHTML = `
+      <style>
+        :host {
+          display: block;
+          width: var(--card-width);
+          height: var(--card-height);
+          background-color: white;
+          box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+          border-radius: 12px;
+          box-sizing: border-box;
+          overflow: hidden;
+          transition: transform 0.5s ease-out, width 0.5s ease-out, height 0.5s ease-out;
+          
+        }
+        .app-card {
+          width: 100%;
+          height: 100%;
+          
+          overflow: hidden;
+        }
+        ::slotted([slot="icon"]) {
+          display: block;
+          width: 100%;
+          height: 100%;
+          
+          border-radius: 12px;
+        }
+      </style>
+      <div class="app-card">
+        <slot name="icon"></slot>
+        <slot></slot>
+      </div>
+    `;
+    this._updateSize();
+    this._clickAppCard();
+    this._isUnfolded = this.getAttribute('fold') !== 'true';
+  }
+  connectedCallback(){
+  }
+  attributeChangedCallback(name, oldValue, newValue) {
+    if(name === 'fold'){
+      if(newValue === 'true'){
+        elFoldAnimationExp(this);
+        setTimeout(()=>{ this._isUnfolded = false; },300);
+        
+        let iconEl = this.querySelector('[slot="icon"]');
+        iconEl.style.display = 'block';
+        iconEl.style.transition = 'all 0.3s ease';
+        iconEl.style.opacity = '1';
+        // let defaultSlot = this.shadowRoot.querySelector('slot:not([name])');
+        // console.log(defaultSlot);
+        // setTimeout(()=>{
+        //   Array.from(this.children).forEach(child => {
+        //     if (!child.hasAttribute('slot')) {
+        //       child.style.display = 'none';
+        //     }
+        //   });
+        // },300);
+      }else{
+        elUnfoldAnimationExp(this);
+        this._isUnfolded = true;
+      }
+      return;
+    }
+    
+    if (oldValue !== newValue) {
+      this._updateSize();
+    }
+  }
+
+  _updateSize() {
+    this.style.setProperty('--card-width', this.width);
+    this.style.setProperty('--card-height', this.height);
+  }
+
+  get height() {
+    return this.getAttribute('height') || '100px';
+  }
+
+  set height(height) {
+    this.setAttribute('height', height);
+  }
+
+  get width() {
+    return this.getAttribute('width') || '100px';
+  }
+
+  set width(width) {
+    this.setAttribute('width', width);
+  }
+  _clickAppCard() {
+    this.addEventListener('click', () => {
+      console.log(this._isUnfolded);
+      if(this._isUnfolded === true) return;
+      let iconEl = this.querySelector('[slot="icon"]');
+      elUnfoldAnimationExp(this);
+      console.log(iconEl);
+      addEaseAnimationExp(iconEl);
+      iconEl.style.opacity = '0';
+      this.setAttribute('fold', 'false');
+      setTimeout(()=>{ iconEl.style.display = 'none'; },300);
+    });
+  }
+}
+/**
  * Components defind
  */
 // fast grid container
@@ -559,8 +706,10 @@ customElements.define('qg-liquid-glass', qgLiquidGlass);
 </qg-liquid-glass> */
 // slider
 customElements.define('qg-slider', qgSlider);
-{/* <qg-slider orientation="vertical" id="volume" value="40" max="100">
+/* <qg-slider orientation="vertical" id="volume" value="40" max="100">
     <svg slot="icon" viewBox="0 0 24 24" fill="#000">
         <path d="..."/>
     </svg>
-</qg-slider> */}
+</qg-slider> */
+// app card
+customElements.define('qg-app-card', qgAppCard);

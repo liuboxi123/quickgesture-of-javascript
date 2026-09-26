@@ -991,3 +991,72 @@ function noticeBanner(innerHtml, el, duration, infoList = []) {
   }, duration);
   banner.dataset.timer = timer;
 }
+/**
+ * Flowing light visual effect
+ * @param {HTMLElement} el element
+ */
+function attachPressGlow(el) {
+  if (!document.getElementById('press-glow-style')) {
+    const style = document.createElement('style');
+    style.id = 'press-glow-style';
+    style.textContent = `
+      [data-press-glow] {
+        position: relative;
+        overflow: hidden;
+        touch-action: none;
+      }
+      [data-press-glow]::before {
+        content: '';
+        position: absolute;
+        width: 600px;
+        height: 600px;
+        border-radius: 50%;
+        background: radial-gradient(
+          circle,
+          rgba(255, 255, 255, 0.35) 0%,
+          rgba(255, 255, 255, 0.15) 25%,
+          rgba(255, 255, 255, 0.05) 50%,
+          transparent 70%
+        );
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 0;
+        left: var(--glow-x, 50%);
+        top: var(--glow-y, 50%);
+        pointer-events: none;
+        transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                    opacity 0.4s ease-out;
+        will-change: transform, opacity;
+      }
+      [data-press-glow].pressed::before {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+        transition: transform 0.15s ease-out,
+                    opacity 0.15s ease-out;
+      }
+    `;
+    document.head.appendChild(style);
+  }
+
+  el.setAttribute('data-press-glow', '');
+
+  function updateGlow(e) {
+    const rect = el.getBoundingClientRect();
+    el.style.setProperty('--glow-x', (e.clientX - rect.left) + 'px');
+    el.style.setProperty('--glow-y', (e.clientY - rect.top) + 'px');
+  }
+
+  el.addEventListener('pointerdown', (e) => {
+    e.preventDefault();
+    updateGlow(e);
+    el.classList.add('pressed');
+    el.setPointerCapture(e.pointerId);
+  });
+
+  el.addEventListener('pointermove', (e) => {
+    if (!el.classList.contains('pressed')) return;
+    updateGlow(e);
+  });
+
+  el.addEventListener('pointerup', () => el.classList.remove('pressed'));
+  el.addEventListener('pointercancel', () => el.classList.remove('pressed'));
+}
