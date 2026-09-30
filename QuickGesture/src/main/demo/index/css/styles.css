@@ -435,3 +435,28 @@ html {
     width: 10%;
     text-align: center;
 }
+/* ground glass card */
+#ground-glass{
+    height: 50px;
+    width: 150px;
+    border-radius: 100px;
+}
+/* slider */
+#slider{
+    height: 50px;
+    width: 200px;
+    backdrop-filter: blur(24px) saturate(1.4);
+    -webkit-backdrop-filter: blur(24px) saturate(1.4);
+    background-color: #ecececb3;
+    border-radius: 100px;
+    box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.3),
+        0 2px 8px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.05);
+}
+/* image vector */
+#image-vector{
+    height: 200px;
+    width: 175px;
+}

@@ -12,10 +12,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. 
  */
+// components control
+// app card
 document.getElementById('app-card-return-btn').addEventListener('click', (e) => {
     console.log('btn');
     e.stopPropagation();
     document.getElementById('app-card').setAttribute('fold', 'true');
 });
-const el = document.getElementById('app-card-icon');
-attachPressGlow(document.getElementById('icon'));
+const appCardIcon = document.getElementById('icon');
+const appCard = document.getElementById('app-card');
+pressFeedback(appCardIcon);
+pressFeedback(document.getElementById('app-card-return-btn'));
+attachPressGlow(appCardIcon);
+//ground glass
+const groundGlass = document.getElementById('ground-glass');
+// attachPressGlow(document.getElementById('ground-glass'));
+pressFeedback(groundGlass);
+// slider
+const slider = document.getElementById('slider');
+pressFeedback(slider);
+// image vector
+const imageVector = document.getElementById('image-vector');
+// pressFeedback(imageVector);
+// attachPressGlow(imageVector);

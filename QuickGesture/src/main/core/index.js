@@ -13,7 +13,58 @@
  * limitations under the License. 
  */
 
+/**
+ * pointer event type enum
+ */
+const PointerEventType = Object.freeze({
+    pointerdown: 'pointerdown',
+    pointerup: 'pointerup',
+    pointermove: 'pointermove',
+    pointerenter: 'pointerenter',
+    pointerleave: 'pointerleave',
+    pointerover: 'pointerover',
+    pointerout: 'pointerout',
+    pointercancel: 'pointercancel',
+    pointergotcapture: 'pointergotcapture',
+    gotpointercapture: 'gotpointercapture',
+    lostpointercapture: 'lostpointercapture'
+});
 
+/**
+ * mouse event type enum
+ */
+const MouseEventType = Object.freeze({
+    click: 'click',
+    dblclick: 'dblclick',
+    mousedown: 'mousedown',
+    mouseup: 'mouseup',
+    mousemove: 'mousemove',
+    mouseenter: 'mouseenter',
+    mouseleave: 'mouseleave',
+    mouseover: 'mouseover',
+    mouseout: 'mouseout',
+    contextmenu: 'contextmenu',
+    wheel: 'wheel'
+});
+
+/**
+ * touch event type enum
+ */
+const TouchEventType = Object.freeze({
+    touchstart: 'touchstart',
+    touchmove: 'touchmove',
+    touchend: 'touchend',
+    touchcancel: 'touchcancel'
+});
+
+/**
+ * key event type enum
+ */
+const KeyEventType = Object.freeze({
+    keypress: 'keypress',
+    keyup: 'keyup',
+    keydown: 'keydown'
+});
 /**
  * Attaches a wheel event listener to an element
  * @param {HTMLElement} element element to attach the wheel event listener
@@ -1004,21 +1055,47 @@ function findElPos(el){
  * Make app card from orginal to full of screen
  * @param {HTMLElement} el element
  */
-function elUnfoldAnimation(el){
+function elUnfoldAnimation(el) {
+  const rect = el.getBoundingClientRect();
+  
   const computed = getComputedStyle(el);
+  el.dataset.foldTop = rect.top + 'px';
+  el.dataset.foldLeft = rect.left + 'px';
+  el.dataset.initialWidth = rect.width + 'px';
+  el.dataset.initialHeight = rect.height + 'px';
+  let borderRadius = computed.borderRadius;
+  el.dataset.initialBorderRadius = '12px';
+
+  const placeholder = document.createElement('div');
+  placeholder.id = 'quickgestureappcardplaceholder';
+  placeholder.style.width = rect.width + 'px';
+  placeholder.style.height = rect.height + 'px';
+  placeholder.style.visibility = 'hidden';
+  placeholder.dataset.placeholderFor = el.getAttribute('id') || String(rect.top);
+  el.parentNode.insertBefore(placeholder, el);
+
   el.style.position = 'fixed';
-  el.style.top = computed.top;
-  el.style.left = computed.left;
+  el.style.top = rect.top + 'px';
+  el.style.left = rect.left + 'px';
+  el.style.width = rect.width + 'px';
+  el.style.height = rect.height + 'px';
+  el.style.margin = '0';
+  el.style.zIndex = '9999999';
+  
 
   const animation = el.animate([
     {
-      width: computed.width,
-      height: computed.height,
-      borderRadius: computed.borderRadius,
+      width: rect.width + 'px',
+      height: rect.height + 'px',
+      top: rect.top + 'px',
+      left: rect.left + 'px',
+      borderRadius: '0',
     },
     {
       width: '100vw',
       height: '100vh',
+      top: '0px',
+      left: '0px',
       borderRadius: '0',
     }
   ], {
@@ -1031,8 +1108,9 @@ function elUnfoldAnimation(el){
     el.style.width = '100vw';
     el.style.height = '100vh';
     el.style.borderRadius = '0';
+    el.style.top = '0';
+    el.style.left = '0';
   };
-  
 }
 /**
  * Set elements position
@@ -1049,18 +1127,29 @@ function setElPos(el, rect){
  * @param {HTMLElement} el element
  */
 function elFoldAnimation(el) {
-  const computed = getComputedStyle(el);
-  
+  const targetTop = el.dataset.foldTop || (el.getBoundingClientRect().top + 'px');
+  const targetLeft = el.dataset.foldLeft || (el.getBoundingClientRect().left + 'px');
+  const targetWidth = el.dataset.initialWidth || (el.getBoundingClientRect().width + 'px');
+  const targetHeight = el.dataset.initialHeight || (el.getBoundingClientRect().height + 'px');
+    let targetBorderRadius = el.dataset.initialBorderRadius;
+    if (!targetBorderRadius) {
+        const computed = getComputedStyle(el);
+        targetBorderRadius = computed.borderRadius || '0px';
+    }
   const animation = el.animate([
     {
-      width: computed.width,
-      height: computed.height,
-      borderRadius: computed.borderRadius,
+      top: '0px',
+      left: '0px',
+      width: '100vw',
+      height: '100vh',
+      borderRadius: '0px',
     },
     {
-      width: el.dataset.initialWidth || '100px',  
-      height: el.dataset.initialHeight || '100px',
-      borderRadius: el.dataset.initialBorderRadius || '5%',
+      top: targetTop,
+      left: targetLeft,
+      width: targetWidth,
+      height: targetHeight,
+      borderRadius: targetBorderRadius,
     }
   ], {
     duration: 500,
@@ -1069,12 +1158,16 @@ function elFoldAnimation(el) {
   });
 
   animation.onfinish = () => {
-    el.style.position = '';
-    el.style.top = '';
-    el.style.left = '';
-    el.style.width = '';
-    el.style.height = '';
-    el.style.borderRadius = '';
+    el.style.removeProperty('position');
+    el.style.removeProperty('top');
+    el.style.removeProperty('left');
+    el.style.removeProperty('width');
+    el.style.removeProperty('height');
+    el.style.removeProperty('border-radius');
+    el.style.removeProperty('z-index');
+    el.style.removeProperty('margin');
+
+    document.getElementById('quickgestureappcardplaceholder').remove();
   };
 }
 /**
@@ -1132,7 +1225,7 @@ function attachPressGlow(el) {
   }
 
   el.addEventListener('pointerdown', (e) => {
-    e.preventDefault();
+    // e.preventDefault();
     updateGlow(e);
     el.classList.add('pressed');
     el.setPointerCapture(e.pointerId);
@@ -1145,4 +1238,166 @@ function attachPressGlow(el) {
 
   el.addEventListener('pointerup', () => el.classList.remove('pressed'));
   el.addEventListener('pointercancel', () => el.classList.remove('pressed'));
+}
+/**
+ * Add ease animation automatically
+ * @param {HTMLElement} el element
+ */
+function addEaseAnimation(el){
+  el.style.transition = 'all 0.3s ease';
+}
+/**
+ * Press feedback
+ * @param {HTMLElement} el element
+ */
+function pressFeedback(el){
+  el.addEventListener('pointerdown',()=>{
+    addEaseAnimation(el);
+    el.style.transform = 'scale(0.95)';
+  });
+  el.addEventListener('pointerup',()=>{
+    el.style.transform = 'scale(1)';
+  });
+}
+/**
+ * Make element draggble
+ * @param {HTMLElement} el element
+ */
+function draggableElementExp(el, scale) {
+  let isDragging = false;
+  let startX = 0;
+  let startY = 0;
+  let translateX = 0;
+  let translateY = 0;
+
+  el.addEventListener('dragstart', (e) => e.preventDefault());
+
+  const dragStart = (e) => {
+    if (e.button !== 0) return;
+
+    isDragging = true;
+    startX = e.clientX - translateX;
+    startY = e.clientY - translateY;
+
+    el.style.zIndex = '999999';
+    el.style.userSelect = 'none';
+    el.style.cursor = 'grabbing';
+  };
+
+  const drag = (e) => {
+    if (!isDragging) return;
+
+    translateX = e.clientX - startX;
+    translateY = e.clientY - startY;
+
+    el.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+  };
+
+  const endDrag = () => {
+    isDragging = false;
+    el.style.userSelect = '';
+    el.style.cursor = '';
+  };
+
+  el.addEventListener('mousedown', dragStart);
+  document.addEventListener('mousemove', drag);
+  document.addEventListener('mouseup', endDrag);
+
+  el.addEventListener('touchstart', (e) => {
+    if (e.touches.length === 1) {
+      const t = e.touches[0];
+      dragStart({ button: 0, clientX: t.clientX, clientY: t.clientY });
+    }
+  }, { passive: true });
+
+  document.addEventListener('touchmove', (e) => {
+    if (isDragging && e.touches.length === 1) {
+      const t = e.touches[0];
+      drag({ clientX: t.clientX, clientY: t.clientY });
+    }
+  }, { passive: true });
+
+  document.addEventListener('touchend', endDrag);
+}
+
+/**
+ * Checking user pinch action of double fingers and scale the element
+ * @param {HTMLelement} el element
+ */
+function pinchInOrOutOfTwoFingersLisenter(el){
+
+  let startDistance = 0;
+  let currentScale = 1;
+
+  function getDistance(touch1, touch2) {
+    const dx = touch1.clientX - touch2.clientX;
+    const dy = touch1.clientY - touch2.clientY;
+    return Math.sqrt(dx * dx + dy * dy);
+  }
+
+  el.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    if (e.touches.length === 2) {
+      startDistance = getDistance(e.touches[0], e.touches[1]);
+    }
+  });
+
+  el.addEventListener('touchmove', (e) => {
+    e.preventDefault();
+
+    if (e.touches.length !== 2) return;
+
+    e.preventDefault();
+
+    const distance = getDistance(e.touches[0], e.touches[1]);
+    const scale = distance / startDistance;
+
+    if (scale > 1) {
+      el.style.transform = `scale(${scale})`;
+      console.log('pinch out', scale);
+    } else if (scale < 1) {
+      el.style.transform = `scale(${scale})`;
+      console.log('pinch in', scale);
+    }
+
+    currentScale = scale;
+  });
+}
+
+/**
+ * Lisenting
+ * @param {HTMLElement} el element
+ * @param {Function} downrollCallback downroll callback function
+ * @param {Function} uprollCallback  uproll callback function
+ */
+function wheelLisenter(el, uprollCallback, downrollCallback){
+  element.addEventListener('wheel', (e) => {
+    if (e.deltaY > 0) {
+      uprollCallback();
+    } else if (e.deltaY < 0) {
+      downrollCallback();
+    }
+  });
+}
+/**
+ * Check which key is press down rightnow
+ * @param {String} key which key would you want to check
+ */
+function isKeyDown(key){
+  document.addEventListener('keydown', (e) => {
+    if (e.ctrlKey && e.key === key) {
+      return true;
+    }
+    return false;
+  });
+}
+
+/**
+ * If the drag is not properly positioned,return to the original value,if properly positioned,proceed to the new value
+ * @param {HTMLElement} el element
+ */
+function dragDamping(el, dirction){
+  el.addEventListener('pointerdown', () => {
+    
+  });
 }

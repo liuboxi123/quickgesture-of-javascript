@@ -80,10 +80,11 @@
     }
     .components{
       /* width: 100vw; */
-      float: left;
+      
     }
     .component{
       margin: 10px;
+      float: left;
     }
   </style>
 </head>
@@ -112,18 +113,33 @@
                 <h1>Fold card</h1>
               </div>
             </div>
-            <div style="padding:20px;">
+            <div style="padding:20px;height: 100%;">
               <div id="app-card-return-btn">Fold</div>
               <h1 id="title">Unfold Card</h1>
             </div>
           </qg-app-card>
       </div>
+      <div class="component">
+        <qg-ground-glass id="ground-glass">
+          <div>
+            <small>Ground glass</small>
+          </div>
+        </qg-ground-glass>
+      </div>
+      <div class="component">
+        <qg-slider id="slider" value="75">
+          <img slot="icon" src="../../resources/img/luminance.svg" alt="">
+        </qg-slider>
+      </div>
+      <div class="component">
+        <qg-image-vector src="../../resources/img/example-img.png" id="image-vector"></qg-image-vector>
+      </div>
     </div>
     <div class="bottombar"></div>
   </div>
 </body>
-    <!-- <script src="../../../core/index.js"></script> -->
-     <script src="../js/index.js"></script>
+    <script src="../../../core/index.js"></script>
+     <!-- <script src="../js/index.js"></script> -->
     <script src="../js/first-page.js"></script>
     <script type="module" src="../../../core/components.js"></script>
     <script>

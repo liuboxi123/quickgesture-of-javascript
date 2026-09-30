@@ -12,43 +12,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. 
  */
-import { gestureListenerExp } from './index-export.js';
+import { gestureListenerExp, isKeyDown, wheelLisenter } from './index-export.js';
 import { elUnfoldAnimationExp, elFoldAnimationExp } from './index-export.js';
 import { addEaseAnimationExp } from './index-export.js';
+import { draggableElementExp } from './index-export.js';
+import { pinchInOrOutOfTwoFingersLisenterExp } from './index-export.js';
 /**
  * Components suport
  */
-/**
- * Quick Gesture Web Components(Components template)
- */
-class QGComponent extends HTMLElement {
-  static get observedAttributes() { // add the attr of label
-    return ['height', 'width'];
-  }
-  constructor() {
-    super();
-    this.attachShadow({ mode: 'open' });
-    this.shadowRoot.innerHTML = `
-      <style>
-        /* style of label */
-      </style>
-    `;
-  }
-  attributeChangedCallback(name, oldValue, newValue) { // function when attr of label changed
-    if (oldValue !== newValue) {
-      this._jsFunction();
-    }
-  }
-  _jsFunction() {
-    // function what you want
-  }
-  get getLabelAttr() {
-    return this.getAttribute('attr');
-  }
-  set setAttrOfLabel(attr) {
-    this.setAttribute('attr', attr);
-  }
-}
 /**
  * fast grid container 
  */
@@ -113,9 +84,9 @@ class Grid extends HTMLElement{
 }
 
 /**
- * liquid glass 
+ * Ground glass 
  */
-class qgLiquidGlass extends HTMLElement {
+class qgGroundGlass extends HTMLElement {
     constructor() {
         super();
         const shadow = this.attachShadow({ mode: 'open' });
@@ -392,6 +363,8 @@ class qgSlider extends HTMLElement {
         :host {
           display: block;
           position: relative;
+          height: 200px;
+          width: 50px;
           overflow: hidden;
           touch-action: none;
           user-select: none;
@@ -593,25 +566,20 @@ class qgAppCard extends HTMLElement {
           display: block;
           width: var(--card-width);
           height: var(--card-height);
-          background-color: white;
-          box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
           border-radius: 12px;
           box-sizing: border-box;
           overflow: hidden;
           transition: transform 0.5s ease-out, width 0.5s ease-out, height 0.5s ease-out;
-          
         }
         .app-card {
           width: 100%;
           height: 100%;
-          
           overflow: hidden;
         }
         ::slotted([slot="icon"]) {
           display: block;
           width: 100%;
           height: 100%;
-          
           border-radius: 12px;
         }
       </style>
@@ -622,12 +590,18 @@ class qgAppCard extends HTMLElement {
     `;
     this._updateSize();
     this._clickAppCard();
+    this._initialized = false;
     this._isUnfolded = this.getAttribute('fold') !== 'true';
   }
   connectedCallback(){
+    this._initialized = true;
   }
   attributeChangedCallback(name, oldValue, newValue) {
     if(name === 'fold'){
+      if (!this._initialized) {
+        this._isUnfolded = newValue !== 'true';
+        return;
+      }
       if(newValue === 'true'){
         elFoldAnimationExp(this);
         setTimeout(()=>{ this._isUnfolded = false; },300);
@@ -649,6 +623,13 @@ class qgAppCard extends HTMLElement {
         elUnfoldAnimationExp(this);
         this._isUnfolded = true;
       }
+
+      this.dispatchEvent(new CustomEvent('foldchange', {
+        detail: { fold: newValue === 'true' },
+        bubbles: true,
+        composed: true,
+      }));
+
       return;
     }
     
@@ -663,7 +644,7 @@ class qgAppCard extends HTMLElement {
   }
 
   get height() {
-    return this.getAttribute('height') || '100px';
+    return this.getAttribute('height');
   }
 
   set height(height) {
@@ -671,7 +652,7 @@ class qgAppCard extends HTMLElement {
   }
 
   get width() {
-    return this.getAttribute('width') || '100px';
+    return this.getAttribute('width');
   }
 
   set width(width) {
@@ -679,10 +660,10 @@ class qgAppCard extends HTMLElement {
   }
   _clickAppCard() {
     this.addEventListener('click', () => {
-      console.log(this._isUnfolded);
+      // console.log(this._isUnfolded);
       if(this._isUnfolded === true) return;
       let iconEl = this.querySelector('[slot="icon"]');
-      elUnfoldAnimationExp(this);
+      // elUnfoldAnimationExp(this);
       console.log(iconEl);
       addEaseAnimationExp(iconEl);
       iconEl.style.opacity = '0';
@@ -690,7 +671,565 @@ class qgAppCard extends HTMLElement {
       setTimeout(()=>{ iconEl.style.display = 'none'; },300);
     });
   }
+  
 }
+
+/**
+ * image vector
+ */
+class qgImageVector extends HTMLElement {
+  static get observedAttributes() {
+    return ['src'];
+  }
+
+  constructor() {
+    super();
+    this.attachShadow({ mode: 'open' });
+  }
+
+  connectedCallback() {
+    if (this.shadowRoot.firstChild) return;
+
+    this.shadowRoot.innerHTML = `
+      <style>
+        :host {
+          display: block;
+          overflow: hidden;
+        }
+        #image-vector-content {
+          width: 100%;
+          height: 100%;
+          background-color: rgba(0, 0, 0, 0.7);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        #image-vector-img {
+          width: 100%;
+          height: 100%;
+          object-fit: contain;
+          pointer-events: none;
+        }
+        #image-vector-preview {
+          height: 100%;
+          width: 100%;
+          background-size: cover;
+          background-position: center;
+          background-repeat: no-repeat;
+          background-color: #c6c6c6;
+        }
+        #image-vector-drag-block{
+          width: 100%;
+          height: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        #app-card{
+          width: 100%;
+          height: 100%;
+        }
+        #image-vector-top-bar{
+          width: 100vw;
+          height: 10vh;
+          position: absolute;
+          top: 0;
+          left: 0;
+          display: none;
+          z-index: 9999999;
+          align-items: center;
+          justify-content: center;
+        }
+        #image-vector-bottom-bar{
+          width: 100%;
+          height: 10vh;
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          display: none;
+          z-index: 9999999;
+          align-items: center;
+          justify-content: center;
+        }
+        .image-vector-btn{
+          background-color: rgba(255, 255, 255, 0.5);
+          backdrop-filter: blur(10px);                 
+          -webkit-backdrop-filter: blur(10px); 
+          width: min(10vw, 45px);
+          height: min(10vw, 45px);
+          border-radius: 50%;
+        }
+        .image-vector-btn-top-island{
+          background-color: rgba(255, 255, 255, 0.5);
+          backdrop-filter: blur(10px);                 
+          -webkit-backdrop-filter: blur(10px); 
+          width: min(30vw, 100px);
+          height: min(10vw, 45px);
+          border-radius: 1000px;
+          margin-left: 10px;
+        }
+        .image-vector-btn-bottom-island{
+          background-color: rgba(255, 255, 255, 0.5);
+          backdrop-filter: blur(10px);                 
+          -webkit-backdrop-filter: blur(10px); 
+          width: min(40vw, 150px);
+          height: min(10vw, 45px);
+          border-radius: 1000px;
+          margin-left: 10px;
+        }
+        .image-vector-back-icon{
+          color: rgba(66, 64, 64, 0.5);
+        }
+      </style>
+
+      <qg-app-card fold="true" id="app-card">
+        <div slot="icon" id="image-vector-preview"></div>
+        <div id="image-vector-content">
+          <div id="image-vector-top-bar">
+            <div class="image-vector-btn" id="image-vector-return-btn">
+              <svg class="image-vector-back-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
+                <path d="M15 19l-7-7 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            <div class="image-vector-btn-top-island" id="image-vector-more-btn"></div>
+          </div>
+          <div id="image-vector-bottom-bar">
+            <div class="image-vector-btn-bottom-island" id="image-vector-download-btn"></div>
+          </div>
+          <div id="image-vector-drag-block">
+            <img src="" alt="" id="image-vector-img">
+          </div>
+        </div>
+      </qg-app-card>
+    `;
+    this._syncSrc();
+    this._draggable();
+    this._initBtn();
+    this._addFoldLisenter();
+  }
+  _initBtn(){
+    const returnBtn = this.shadowRoot.querySelector('#image-vector-return-btn');
+    this.shadowRoot.querySelector('#image-vector-download-btn');
+    const dragBlock = this.shadowRoot.querySelector('#image-vector-drag-block');
+    
+    returnBtn.addEventListener('click', () => {
+      const appCard = this.shadowRoot.querySelector('#app-card');
+      appCard.setAttribute('fold', 'true');
+    });
+  }
+  _addFoldLisenter() {
+    const topBar = this.shadowRoot.querySelector('#image-vector-top-bar');
+    const bottomBar = this.shadowRoot.querySelector('#image-vector-bottom-bar');
+    const card = this.shadowRoot.querySelector('#app-card');
+
+    const isFolded = card.getAttribute('fold') === 'true';
+    topBar.style.display = isFolded ? 'none' : 'block';
+    bottomBar.style.display = isFolded ? 'none' : 'block';
+
+    card.addEventListener('foldchange', (e) => {
+      if (e.detail.fold) {
+        topBar.style.display = 'none';
+        bottomBar.style.display = 'none';
+      } else {
+        topBar.style.display = 'flex';
+        bottomBar.style.display = 'flex';
+      }
+    });
+  }
+  attributeChangedCallback(name, oldValue, newValue) {
+    if (name === 'src' && oldValue !== newValue) {
+      this._syncSrc();
+    }
+  }
+   _syncSrc() {
+    const src = this.getAttribute('src');
+    const img = this.shadowRoot.querySelector('#image-vector-img');
+    const preview = this.shadowRoot.querySelector('#image-vector-preview');
+    if (img) img.src = src || '';
+    if (preview) {
+      if(src){
+        preview.style.backgroundImage = `url('${src}')`;
+      }else{
+        preview.style.backgroundImage = '';
+      }
+    }
+  }
+  _draggable() {
+    const dragBlock = this.shadowRoot.querySelector('#image-vector-drag-block');
+    if (!dragBlock) return;
+
+    let scale = 1;
+    const MIN_SCALE = 0.2;
+    const MAX_SCALE = 5;
+    const SCALE_STEP = 0.1;
+
+    let isDragging = false;
+    let startX = 0;
+    let startY = 0;
+    let translateX = 0;
+    let translateY = 0;
+
+    const updateTransform = () => {
+      dragBlock.style.transform =
+        `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+    };
+
+    dragBlock.addEventListener(
+      'wheel',
+      (e) => {
+        if (!e.ctrlKey) return;
+        e.preventDefault();
+
+        if (e.deltaY < 0) {
+          scale = Math.min(scale + SCALE_STEP, MAX_SCALE);
+        } else {
+          scale = Math.max(scale - SCALE_STEP, MIN_SCALE);
+        }
+
+        updateTransform();
+      },
+      { passive: false }
+    );
+
+    dragBlock.addEventListener('mousedown', (e) => {
+      isDragging = true;
+      startX = e.clientX - translateX;
+      startY = e.clientY - translateY;
+      dragBlock.style.cursor = 'grabbing';
+    });
+
+    window.addEventListener('mousemove', (e) => {
+      if (!isDragging) return;
+      translateX = e.clientX - startX;
+      translateY = e.clientY - startY;
+      updateTransform();
+    });
+
+    window.addEventListener('mouseup', () => {
+      if (isDragging) {
+        isDragging = false;
+        dragBlock.style.cursor = 'grab';
+      }
+    });
+
+    dragBlock.addEventListener(
+      'touchstart',
+      (e) => {
+        const touch = e.touches[0];
+        isDragging = true;
+        startX = touch.clientX - translateX;
+        startY = touch.clientY - translateY;
+      },
+      { passive: true }
+    );
+
+    dragBlock.addEventListener(
+      'touchmove',
+      (e) => {
+        if (!isDragging) return;
+        const touch = e.touches[0];
+        translateX = touch.clientX - startX;
+        translateY = touch.clientY - startY;
+        updateTransform();
+      },
+      { passive: true }
+    );
+
+    dragBlock.addEventListener('touchend', () => {
+      isDragging = false;
+    });
+
+    // 初始样式
+    dragBlock.style.transformOrigin = 'center center';
+    dragBlock.style.cursor = 'grab';
+    dragBlock.style.willChange = 'transform';
+  }
+  get src(){
+    return this.getAttribute('src');
+  }
+  set src(val){
+    this.setAttribute('src', val);
+  }
+}
+
+/**
+ * draggble element
+ */
+class qgDraggbleElement extends HTMLElement {
+  constructor() {
+    super();
+    this.attachShadow({ mode: 'open' });
+    this.shadowRoot.innerHTML = `
+      <style>
+        :host { display: block; }
+      </style>
+      <div>
+        <slot></slot>
+      </div>
+    `;
+    this._draggble();
+  }
+  
+  _draggble(){
+    draggableElementExp(this);
+  }
+}
+
+/**
+ * siderbar
+ */
+class qgLeftSiderbar extends HTMLElement {
+  constructor() {
+    super();
+    this.attachShadow({ mode: 'open' });
+    this.shadowRoot.innerHTML = `
+      <style>
+        :host {
+          display: block;
+          position: fixed;
+          top: 0;
+          left: 0;
+          height: 100vh;
+          width: 100vw;
+          z-index: 9999999;
+          transition: transform 0.3s ease;
+          transform: translateX(-100%);
+        }
+        #siderbar {
+          width: 100%;
+          height: 100%;
+        }
+      </style>
+      <div id="siderbar">
+        <slot></slot>
+      </div>
+    `;
+
+    this._isDragging = false;
+    this._startX = 0;
+    this._currentX = 0;
+    this._hiddenWatcher = null;
+    this._contentMove = null;
+    this._contentUp = null;
+    this.onSettled = null;
+    this._exitSiderbar();
+    this._bannedSlotBubbing();
+  }
+
+  _bannedSlotBubbing() {
+    this.shadowRoot.querySelector('slot').addEventListener('click', (e) => {
+      e.stopPropagation();
+    });
+  }
+
+  _exitSiderbar() {
+    this.shadowRoot.querySelector('#siderbar').addEventListener('click', () => {
+      this.close();
+    });
+  }
+
+  connectedCallback() {
+    requestAnimationFrame(() => {
+      this._initPosition();
+      this._bindContentDrag();
+      this._bindHiddenWatcher();
+    });
+  }
+
+  disconnectedCallback() {
+    this._unbindHiddenWatcher();
+    if (this._contentMove) {
+      window.removeEventListener('mousemove', this._contentMove);
+    }
+    if (this._contentUp) {
+      window.removeEventListener('mouseup', this._contentUp);
+    }
+  }
+
+  _initPosition() {
+    const width = this.offsetWidth;
+    this._currentX = -width;
+    this.style.transform = `translateX(${-width}px)`;
+  }
+
+  _bindContentDrag() {
+    const siderbar = this.shadowRoot.querySelector('#siderbar');
+    if (!siderbar) return;
+
+    siderbar.addEventListener('mousedown', (e) => {
+      this._isDragging = true;
+      this._startX = e.clientX - this._currentX;
+      this.style.transition = 'none';
+    });
+
+    this._contentMove = (e) => {
+      if (!this._isDragging) return;
+      const width = this.offsetWidth;
+      let x = e.clientX - this._startX;
+      x = Math.max(-width, Math.min(0, x));
+      this._currentX = x;
+      this.style.transform = `translateX(${x}px)`;
+    };
+
+    this._contentUp = () => {
+      if (!this._isDragging) return;
+      this._isDragging = false;
+      this.style.transition = 'transform 0.3s ease';
+      this._snap();
+    };
+
+    window.addEventListener('mousemove', this._contentMove);
+    window.addEventListener('mouseup', this._contentUp);
+  }
+
+  _snap() {
+    const width = this.offsetWidth;
+    const wasOpen = this._currentX === 0;
+
+    if (this._currentX < -width / 2) {
+      this._currentX = -width;
+    } else {
+      this._currentX = 0;
+    }
+
+    const isOpen = this._currentX === 0;
+    this.style.transform = `translateX(${this._currentX}px)`;
+    this._syncHiddenWatcher();
+
+    if (isOpen !== wasOpen) {
+      let settled = false;
+      const finish = () => {
+        if (settled) return;
+        settled = true;
+
+        if (isOpen) {
+          // this.open();
+          // const shade = document.createElement('div');
+          // shade.id = 'qgsiderbarshade';
+          // shade.style.cssText = `
+          //   position: fixed; top: 0; left: 0;
+          //   width: 100vw; height: 100vh;
+          //   background: rgba(0,0,0,0.7);
+          //   z-index: 9999998;
+          // `;
+          // shade.addEventListener('click', () => this.close());
+          // document.body.appendChild(shade);
+        } else if(!isOpen) {
+          // document.getElementById('qgsiderbarshade')?.remove();
+          // this._closeShade();
+        }
+
+        if (typeof this.onSettled === 'function') {
+          this.onSettled(isOpen);
+        }
+      };
+
+      const handler = () => {
+        this.removeEventListener('transitionend', handler);
+        finish();
+      };
+      this.addEventListener('transitionend', handler);
+
+    }
+  }
+
+  _isHidden() {
+    const width = this.offsetWidth;
+    if (width === 0) return true;
+    return this._currentX <= -width + 2;
+  }
+
+  _bindHiddenWatcher() {
+    this._hiddenWatcher = (e) => {
+      if (this._isDragging) return;
+      this._isDragging = true;
+      this._startX = e.clientX - this._currentX;
+      this.style.transition = 'none';
+
+      const move = (ev) => {
+        if (!this._isDragging) return;
+        const width = this.offsetWidth;
+        let x = ev.clientX - this._startX;
+        x = Math.max(-width, Math.min(0, x));
+        this._currentX = x;
+        this.style.transform = `translateX(${x}px)`;
+      };
+
+      const up = () => {
+        this._isDragging = false;
+        document.removeEventListener('mousemove', move);
+        document.removeEventListener('mouseup', up);
+        this.style.transition = 'transform 0.3s ease';
+        this._snap();
+      };
+
+      document.addEventListener('mousemove', move);
+      document.addEventListener('mouseup', up);
+    };
+
+    document.addEventListener('mousedown', this._hiddenWatcher);
+    this._syncHiddenWatcher();
+  }
+
+  _unbindHiddenWatcher() {
+    if (this._hiddenWatcher) {
+      document.removeEventListener('mousedown', this._hiddenWatcher);
+      this._hiddenWatcher = null;
+    }
+  }
+
+  _syncHiddenWatcher() {
+    if (this._isHidden()) {
+      if (!this._hiddenWatcher) { // pack up
+        this._shadeOp(true);
+        this._bindHiddenWatcher();
+      }
+    } else { // unfold
+      this._shadeOp(false);
+      this._unbindHiddenWatcher();
+    }
+  }
+  _shadeOp(isRemove){
+    if(isRemove === true){
+      document.getElementById('qgsiderbarshade').remove();
+      console.log(document.getElementById('qgsiderbarshade'));
+    }else{
+      if(!document.getElementById('qgsiderbarshade')){
+        const shade = document.createElement('div');
+        shade.id = 'qgsiderbarshade';
+        shade.style.height = '100vh';
+        shade.style.width = '100vw';
+        shade.style.backgroundColor = 'rgba(0,0,0,0.7)';
+        shade.style.position = 'fixed';
+        shade.style.top = '0';
+        shade.style.zIndex = '9999998';
+        document.body.appendChild(shade);
+      }
+      
+    }
+  }
+  open() {
+    const width = this.offsetWidth;
+    if (this._currentX === 0) {
+      this.style.transition = 'none';
+      this._currentX = -width;
+      this.style.transform = `translateX(${-width}px)`;
+      void this.offsetHeight;
+      this.style.transition = 'transform 0.3s ease';
+    }
+    this._currentX = 0;
+    this.style.transform = 'translateX(0)';
+    this._syncHiddenWatcher();
+    
+  }
+  close() {
+    const width = this.offsetWidth;
+    this._currentX = -width;
+    this.style.transition = 'transform 0.3s ease';
+    this.style.transform = `translateX(${-width}px)`;
+    this._syncHiddenWatcher();
+  }
+}
+
 /**
  * Components defind
  */
@@ -698,10 +1237,10 @@ class qgAppCard extends HTMLElement {
 customElements.define('qg-grid', Grid);
 /* <qg-grid cols="5" rows="7" gap="15px" padding="30px"></qg-grid> */
 // liquid-glass
-customElements.define('qg-liquid-glass', qgLiquidGlass);
+customElements.define('qg-ground-glass', qgGroundGlass);
 /* <qg-liquid-glass>
     <div>
-        <small>liquid glass</small>
+        <small>Ground glass</small>
     </div>
 </qg-liquid-glass> */
 // slider
@@ -713,3 +1252,29 @@ customElements.define('qg-slider', qgSlider);
 </qg-slider> */
 // app card
 customElements.define('qg-app-card', qgAppCard);
+/**
+<qg-app-card fold="true" id="app-card">
+  <div slot="icon" id="icon">
+    <div id="app-card-icon">
+      <h1>Fold card</h1>
+    </div>
+  </div>
+  <div style="padding:20px;height: 100%;">
+    <div id="app-card-return-btn">Fold</div>
+    <h1 id="title">Unfold Card</h1>
+  </div>
+</qg-app-card>
+ */
+// image vector
+customElements.define('qg-image-vector', qgImageVector);
+// <qg-image-vector src="../../resources/img/example-img.png" id="image-vector"></qg-image-vector>
+
+// draggble element
+customElements.define('qg-draggble-element', qgDraggbleElement);
+
+// siderbar
+customElements.define('qg-left-siderbar', qgLeftSiderbar);
+{/* <qg-left-siderbar >
+        <div></div>
+    </qg-left-siderbar> */}
+// 
