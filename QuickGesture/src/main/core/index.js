@@ -1371,7 +1371,7 @@ function pinchInOrOutOfTwoFingersLisenter(el){
  * @param {Function} uprollCallback  uproll callback function
  */
 function wheelLisenter(el, uprollCallback, downrollCallback){
-  element.addEventListener('wheel', (e) => {
+  el.addEventListener('wheel', (e) => {
     if (e.deltaY > 0) {
       uprollCallback();
     } else if (e.deltaY < 0) {
@@ -1389,15 +1389,5 @@ function isKeyDown(key){
       return true;
     }
     return false;
-  });
-}
-
-/**
- * If the drag is not properly positioned,return to the original value,if properly positioned,proceed to the new value
- * @param {HTMLElement} el element
- */
-function dragDamping(el, dirction){
-  el.addEventListener('pointerdown', () => {
-    
   });
 }

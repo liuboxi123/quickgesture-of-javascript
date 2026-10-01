@@ -460,3 +460,10 @@ html {
     height: 200px;
     width: 175px;
 }
+/* left siderbar */
+.left-siderbar{
+    float: left;
+    width: 70vw;
+    height: 100%;
+    background-color: #fff;
+}
