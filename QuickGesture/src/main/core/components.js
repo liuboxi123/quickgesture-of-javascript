@@ -1265,7 +1265,7 @@ class qgLeftSiderbar extends HTMLElement {
 }
 
 /**
- * verticalrollingbox
+ * vertical rolling box
  */
 class qgVerticalRollingBox extends HTMLElement {
   constructor() {
@@ -1273,12 +1273,14 @@ class qgVerticalRollingBox extends HTMLElement {
     this.attachShadow({ mode: 'open' });
     this.shadowRoot.innerHTML = `
       <style>
-        :host { 
+        :host {
           display: block;
           overflow: hidden;
           position: relative;
           height: 100%;
           cursor: grab;
+          touch-action: none;
+          user-select: none;
         }
         :host(:active) {
           cursor: grabbing;
@@ -1286,6 +1288,7 @@ class qgVerticalRollingBox extends HTMLElement {
         #inner-vertical-rolling-box {
           width: 100%;
           transition: transform 0.3s ease;
+          will-change: transform;
         }
         #inner-vertical-rolling-box.dragging {
           transition: none;
@@ -1320,66 +1323,227 @@ class qgVerticalRollingBox extends HTMLElement {
     if (!innerBox) return;
 
     innerBox.addEventListener('pointerdown', (e) => {
-      e.preventDefault();
+      if (e.target.closest('button, a, input, select, textarea, [role="button"]')) {
+        return;
+      }
+
       this._isDragging = true;
       this._startY = e.clientY;
       this._startOffsetY = this._offsetY;
       innerBox.classList.add('dragging');
-      this.setPointerCapture(e.pointerId);
+
+      try {
+        this.setPointerCapture(e.pointerId);
+      } catch {}
     });
 
     this._contentMove = (e) => {
       if (!this._isDragging) return;
+
       const deltaY = e.clientY - this._startY;
+
+      if (Math.abs(deltaY) < 5) return;
+
       this._offsetY = this._startOffsetY + deltaY;
-      
+
       const maxOffset = 0;
       const minOffset = -(innerBox.scrollHeight - this.offsetHeight);
       this._offsetY = Math.max(minOffset, Math.min(maxOffset, this._offsetY));
-      
+
       innerBox.style.transform = `translateY(${this._offsetY}px)`;
     };
 
-    this._contentUp = (e) => {
+    this._contentUp = () => {
       if (!this._isDragging) return;
+
       this._isDragging = false;
       innerBox.classList.remove('dragging');
-      this.releasePointerCapture(e.pointerId);
+
+      try {
+        this.releasePointerCapture(this._currentPointerId);
+      } catch {}
+      innerBox.style.transform = `translateY(${this._offsetY}px)`;
     };
 
-    this.addEventListener('pointermove', this._contentMove);
-    this.addEventListener('pointerup', this._contentUp);
-    this.addEventListener('pointerleave', this._contentUp);
+    document.addEventListener('pointermove', this._contentMove);
+    document.addEventListener('pointerup', this._contentUp);
+    document.addEventListener('pointercancel', this._contentUp);
+
+    innerBox.addEventListener('dragstart', (e) => e.preventDefault());
   }
 
   _unbindDragEvents() {
     if (this._contentMove) {
-      this.removeEventListener('pointermove', this._contentMove);
+      document.removeEventListener('pointermove', this._contentMove);
     }
     if (this._contentUp) {
-      this.removeEventListener('pointerup', this._contentUp);
-      this.removeEventListener('pointerleave', this._contentUp);
+      document.removeEventListener('pointerup', this._contentUp);
+      document.removeEventListener('pointercancel', this._contentUp);
+    }
+  }
+
+  _mouseScroll() {
+    this.addEventListener('wheel', (e) => {
+      const innerBox = this.shadowRoot.querySelector('#inner-vertical-rolling-box');
+      if (!innerBox) return;
+
+      const canScroll = innerBox.scrollHeight > this.offsetHeight;
+      if (!canScroll) return;
+
+      e.preventDefault();
+
+      const scrollSpeed = 1;
+      this._offsetY -= e.deltaY * scrollSpeed;
+
+      const maxOffset = 0;
+      const minOffset = -(innerBox.scrollHeight - this.offsetHeight);
+      this._offsetY = Math.max(minOffset, Math.min(maxOffset, this._offsetY));
+
+      innerBox.style.transform = `translateY(${this._offsetY}px)`;
+    }, { passive: false });
+  }
+}
+
+/**
+ * horizontal rolling box 
+ */
+class qgHorizontalRollingBox extends HTMLElement {
+  constructor() {
+    super();
+    this.attachShadow({ mode: 'open' });
+    this.shadowRoot.innerHTML = `
+      <style>
+        :host {
+          display: block;
+          overflow: hidden;
+          position: relative;
+          width: 100%;
+          cursor: grab;
+          touch-action: none;
+          user-select: none;
+        }
+        :host(:active) {
+          cursor: grabbing;
+        }
+        #inner-horizontal-rolling-box {
+          height: 100%;
+          white-space: nowrap;
+          transition: transform 0.3s ease;
+          will-change: transform;
+        }
+        #inner-horizontal-rolling-box.dragging {
+          transition: none;
+        }
+      </style>
+      <div id="inner-horizontal-rolling-box">
+        <slot></slot>
+      </div>
+    `;
+
+    this._offsetX = 0;
+    this._isDragging = false;
+    this._startX = 0;
+    this._startOffsetX = 0;
+    this._contentMove = null;
+    this._contentUp = null;
+  }
+
+  connectedCallback() {
+    requestAnimationFrame(() => {
+      this._mouseScroll();
+      this._draggable();
+    });
+  }
+
+  disconnectedCallback() {
+    this._unbindDragEvents();
+  }
+
+  _draggable() {
+    const innerBox = this.shadowRoot.querySelector('#inner-horizontal-rolling-box');
+    if (!innerBox) return;
+
+    innerBox.addEventListener('pointerdown', (e) => {
+      if (e.target.closest('button, a, input, select, textarea, [role="button"]')) {
+        return;
+      }
+
+      this._isDragging = true;
+      this._startX = e.clientX;
+      this._startOffsetX = this._offsetX;
+      innerBox.classList.add('dragging');
+
+      try {
+        this.setPointerCapture(e.pointerId);
+      } catch {}
+    });
+
+    this._contentMove = (e) => {
+      if (!this._isDragging) return;
+
+      const deltaX = e.clientX - this._startX;
+
+      if (Math.abs(deltaX) < 5) return;
+
+      this._offsetX = this._startOffsetX + deltaX;
+
+      const maxOffset = 0;
+      const minOffset = -(innerBox.scrollWidth - this.offsetWidth);
+      this._offsetX = Math.max(minOffset, Math.min(maxOffset, this._offsetX));
+
+      innerBox.style.transform = `translateX(${this._offsetX}px)`;
+    };
+
+    this._contentUp = () => {
+      if (!this._isDragging) return;
+
+      this._isDragging = false;
+      innerBox.classList.remove('dragging');
+
+      try {
+        this.releasePointerCapture(this._currentPointerId);
+      } catch {}
+
+      innerBox.style.transform = `translateX(${this._offsetX}px)`;
+    };
+
+    document.addEventListener('pointermove', this._contentMove);
+    document.addEventListener('pointerup', this._contentUp);
+    document.addEventListener('pointercancel', this._contentUp);
+
+    innerBox.addEventListener('dragstart', (e) => e.preventDefault());
+  }
+
+  _unbindDragEvents() {
+    if (this._contentMove) {
+      document.removeEventListener('pointermove', this._contentMove);
+    }
+    if (this._contentUp) {
+      document.removeEventListener('pointerup', this._contentUp);
+      document.removeEventListener('pointercancel', this._contentUp);
     }
   }
 
   _mouseScroll() {
     this.addEventListener('wheel', (e) => {
       e.preventDefault();
-      
-      const innerBox = this.shadowRoot.querySelector('#inner-vertical-rolling-box');
+
+      const innerBox = this.shadowRoot.querySelector('#inner-horizontal-rolling-box');
       if (!innerBox) return;
 
       const scrollSpeed = 1;
-      this._offsetY -= e.deltaY * scrollSpeed;
-      
+      const delta = e.deltaX !== 0 ? e.deltaX : e.deltaY;
+      this._offsetX -= delta * scrollSpeed;
+
       const maxOffset = 0;
-      const minOffset = -(innerBox.scrollHeight - this.offsetHeight);
-      this._offsetY = Math.max(minOffset, Math.min(maxOffset, this._offsetY));
-      
-      innerBox.style.transform = `translateY(${this._offsetY}px)`;
+      const minOffset = -(innerBox.scrollWidth - this.offsetWidth);
+      this._offsetX = Math.max(minOffset, Math.min(maxOffset, this._offsetX));
+
+      innerBox.style.transform = `translateX(${this._offsetX}px)`;
     }, { passive: false });
   }
 }
+
 
 
 /**
@@ -1432,5 +1596,17 @@ customElements.define('qg-left-siderbar', qgLeftSiderbar);
 
 // vertical rolling box
 customElements.define('qg-vertical-rolling-box', qgVerticalRollingBox);
+{/* <qg-vertical-rolling-box id="v-box">
+  <div id="v-box-content">
+  </div>
+</qg-vertical-rolling-box> */}
 
+// horizontal rolling box
+customElements.define('qg-horizontal-rolling-box', qgHorizontalRollingBox);
+{/* <qg-horizontal-rolling-box id="h-box">
+  <div id="h-box-content">
+    The horizontal rolling box
+  </div>
+</qg-horizontal-rolling-box> */}
 
+// 
