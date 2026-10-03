@@ -1,0 +1,35 @@
+{
+  "name": "@quickgesture/core",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "A lightweight web gesture interaction component library",
+  "main": "dist/index.js",
+  "module": "dist/index.esm.js",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "vite build"
+  },
+  "keywords": [
+    "gesture",
+    "web",
+    "component",
+    "touch",
+    "ui"
+  ],
+  "author": "quickgesture",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/liuboxi123/quickgesture-of-javascript.git"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "vite": "^7.0.0"
+  }
+}
