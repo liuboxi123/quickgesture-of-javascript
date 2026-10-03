@@ -764,7 +764,7 @@ class qgImageVector extends HTMLElement {
           background-color: rgba(255, 255, 255, 0.5);
           backdrop-filter: blur(10px);                 
           -webkit-backdrop-filter: blur(10px); 
-          width: min(30vw, 100px);
+          width: min(40vw, 100px);
           height: min(10vw, 45px);
           border-radius: 1000px;
           margin-left: 10px;
@@ -773,7 +773,7 @@ class qgImageVector extends HTMLElement {
           background-color: rgba(255, 255, 255, 0.5);
           backdrop-filter: blur(10px);                 
           -webkit-backdrop-filter: blur(10px); 
-          width: min(40vw, 150px);
+          width: min(50vw, 150px);
           height: min(10vw, 45px);
           border-radius: 1000px;
           margin-left: 10px;
@@ -792,10 +792,14 @@ class qgImageVector extends HTMLElement {
                 <path d="M15 19l-7-7 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
             </div>
-            <div class="image-vector-btn-top-island" id="image-vector-more-btn"></div>
+            <qg-horizontal-rolling-box class="image-vector-btn-top-island" id="image-vector-more-btn">
+              <slot name="image-vector-top-tools"></slot>
+            </qg-horizontal-rolling-box>
           </div>
           <div id="image-vector-bottom-bar">
-            <div class="image-vector-btn-bottom-island" id="image-vector-download-btn"></div>
+            <qg-horizontal-rolling-box class="image-vector-btn-bottom-island" id="image-vector-download-btn">
+              <slot name="image-vector-bottom-tools"></slot>
+            </qg-horizontal-rolling-box>
           </div>
           <div id="image-vector-drag-block">
             <img src="" alt="" id="image-vector-img">

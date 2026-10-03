@@ -12,6 +12,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. 
  */
+// first page control 
+document.getElementById('git-link-btn').addEventListener('click', () => {
+    window.open("https://github.com/liuboxi123/quickgesture-of-javascript.git", "_blank");
+});
 // components control
 // app card
 document.getElementById('app-card-return-btn').addEventListener('click', (e) => {

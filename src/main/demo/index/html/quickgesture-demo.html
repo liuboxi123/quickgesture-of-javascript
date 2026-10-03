@@ -97,7 +97,7 @@
       </div>
       
       <div class="nav-item">
-        <div class="git-link name">Github</div>
+        <div class="git-link name" id="git-link-btn">Github</div>
         <div class="doc name">Docment</div>
         <div class="home name">Home</div>
         <div class="more name">More</div>
@@ -132,9 +132,32 @@
         </qg-slider>
       </div>
       <div class="component">
-        <qg-image-vector src="../../resources/img/example-img.png" id="image-vector"></qg-image-vector>
+        <qg-image-vector src="../../resources/img/example-img.png" id="image-vector">
+          <div slot="image-vector-top-tools" id="image-vector-top-tools-container">
+            <div id="image-vector-top-tools-share">
+              Share
+            </div>
+            <div id="image-vector-top-tools-like">
+              Like
+            </div>
+            <div id="image-vector-top-tools-collect">
+              Collect
+            </div>
+          </div>
+          <div slot="image-vector-bottom-tools" id="image-vector-bottom-tools-container">
+            <div id="image-vector-bottom-tools-download">
+              Download
+            </div>
+            <div id="image-vector-bottom-tools-detials">
+              Detials
+            </div>
+            <div id="image-vector-bottom-tools-Delete">
+              Delete
+            </div>
+          </div>
+        </qg-image-vector>
       </div>
-      <div class="component">
+      <div class="component" style="display: none;">
         <qg-left-siderbar >
           <div class="left-siderbar"></div>
         </qg-left-siderbar>
