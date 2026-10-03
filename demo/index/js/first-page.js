@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. 
  */
+import { attachPressGlowExp, pressFeedbackExp } from "../../../src/core/index-export.js";
 // first page control 
 document.getElementById('git-link-btn').addEventListener('click', () => {
     window.open("https://github.com/liuboxi123/quickgesture-of-javascript.git", "_blank");
@@ -25,16 +26,16 @@ document.getElementById('app-card-return-btn').addEventListener('click', (e) => 
 });
 const appCardIcon = document.getElementById('icon');
 const appCard = document.getElementById('app-card');
-pressFeedback(appCardIcon);
-pressFeedback(document.getElementById('app-card-return-btn'));
-attachPressGlow(appCardIcon);
+pressFeedbackExp(appCardIcon);
+pressFeedbackExp(document.getElementById('app-card-return-btn'));
+attachPressGlowExp(appCardIcon);
 //ground glass
 const groundGlass = document.getElementById('ground-glass');
 // attachPressGlow(document.getElementById('ground-glass'));
-pressFeedback(groundGlass);
+pressFeedbackExp(groundGlass);
 // slider
 const slider = document.getElementById('slider');
-pressFeedback(slider);
+pressFeedbackExp(slider);
 // image vector
 const imageVector = document.getElementById('image-vector');
 // pressFeedback(imageVector);

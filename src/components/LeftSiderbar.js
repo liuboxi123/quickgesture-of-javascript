@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. 
  */
-import { gestureListenerExp, isKeyDown, wheelLisenterExp } from '../core/index-export.js';
+import { gestureListenerExp, isKeyDownExp, wheelLisenterExp } from '../core/index-export.js';
 import { elUnfoldAnimationExp, elFoldAnimationExp } from '../core/index-export.js';
 import { addEaseAnimationExp } from '../core/index-export.js';
 import { draggableElementExp } from '../core/index-export.js';
