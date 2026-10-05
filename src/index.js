@@ -18,5 +18,6 @@ export { qgImageVector as ImageVector } from './components/ImageVector';
 export { qgLeftSiderbar as LeftSiderbar } from './components/LeftSiderbar';
 export { qgSlider as Slider } from './components/Slider';
 export { qgVerticalRollingBox as VerticalRollingBox } from './components/VerticalRollingBox';
+export { qgLoader as Loader} from './components/Loader';
 
 export * from './core/index-export';
