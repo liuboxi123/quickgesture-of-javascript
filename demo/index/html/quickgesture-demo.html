@@ -114,7 +114,7 @@
               </div>
             </div>
             <div style="padding:20px;height: 100%;">
-              <div id="app-card-return-btn">Fold</div>
+              <div class="app-card-return-btn">Fold</div>
               <h1 id="title">Unfold Card</h1>
             </div>
           </qg-app-card>
@@ -157,7 +157,7 @@
           </div>
         </qg-image-vector>
       </div>
-      <div class="component" style="display: none;">
+      <div class="component"">
         <qg-left-siderbar >
           <div class="left-siderbar"></div>
         </qg-left-siderbar>
@@ -180,7 +180,20 @@
       <div class="component">
         <qg-loader size="64" color="#000000" track-color="#e8def8"></qg-loader>
       </div>
-    </div>
+      <div class="component">
+        <div style="background-color: #cfcfcf;border-radius: 15px;padding: 5px;" id="bottom-sheet-op">
+          <h6>Bottom sheet click me!</h6>
+        </div>
+      </div>
+      <div class="component">
+        <qg-bottom-sheet id="mySheet">
+          <div class="sheet-content">
+            <h2>BottomSheet</h2>
+            <p>This is the component of bottom sheet swipe up,click black areas and click close botton to close the bottom sheet </p>
+            <button id="close-bottom-sheet-btn" style="background-color: #cfcfcf;">Close</button>
+          </div>
+        </qg-bottom-sheet>
+      </div>
     <div class="bottombar"></div>
   </div>
 </body>
@@ -196,7 +209,9 @@
     <script type="module" src="../../../src/components/Slider.js"></script>
     <script type="module" src="../../../src/components/VerticalRollingBox.js"></script>
     <script type="module" src="../../../src/components/Loader.js"></script>
-    <script>
+    <script type="module" src="../../../src/components/BottomSheet.js"></script>
+    <script type="module">
+      import '../../../src/components/BottomSheet.js';
       
     </script>
 </html>

@@ -19,7 +19,7 @@ document.getElementById('git-link-btn').addEventListener('click', () => {
 });
 // components control
 // app card
-document.getElementById('app-card-return-btn').addEventListener('click', (e) => {
+document.querySelector('.app-card-return-btn').addEventListener('click', (e) => {
     console.log('btn');
     e.stopPropagation();
     document.getElementById('app-card').setAttribute('fold', 'true');
@@ -27,7 +27,7 @@ document.getElementById('app-card-return-btn').addEventListener('click', (e) => 
 const appCardIcon = document.getElementById('icon');
 const appCard = document.getElementById('app-card');
 pressFeedbackExp(appCardIcon);
-pressFeedbackExp(document.getElementById('app-card-return-btn'));
+pressFeedbackExp(document.querySelector('.app-card-return-btn'));
 attachPressGlowExp(appCardIcon);
 //ground glass
 const groundGlass = document.getElementById('ground-glass');
@@ -40,3 +40,13 @@ pressFeedbackExp(slider);
 const imageVector = document.getElementById('image-vector');
 // pressFeedback(imageVector);
 // attachPressGlow(imageVector);
+// bottom sheet
+document.getElementById('bottom-sheet-op').addEventListener('click',()=>{
+    const sheet = document.querySelector('qg-bottom-sheet');
+    sheet.isShow = true;
+});
+document.getElementById('close-bottom-sheet-btn').addEventListener('click',()=>{
+    console.log('click close btn');
+    const sheet = document.querySelector('qg-bottom-sheet');
+    sheet.isShow = false;
+});

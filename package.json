@@ -30,6 +30,7 @@
     "access": "public"
   },
   "devDependencies": {
+    "typescript": "^7.0.2",
     "vite": "^7.0.0"
   }
 }

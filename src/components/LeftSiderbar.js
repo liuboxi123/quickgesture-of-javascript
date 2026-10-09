@@ -18,7 +18,7 @@ import { addEaseAnimationExp } from '../core/index-export.js';
 import { draggableElementExp } from '../core/index-export.js';
 import { pinchInOrOutOfTwoFingersLisenterExp } from '../core/index-export.js';
 /**
- * siderbar
+ * left siderbar
  */
 
 export class qgLeftSiderbar extends HTMLElement {
