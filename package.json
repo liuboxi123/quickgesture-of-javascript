@@ -3,15 +3,16 @@
   "version": "0.1.3",
   "type": "module",
   "description": "A lightweight web gesture interaction component library",
-  "main": "dist/index.js",
-  "module": "dist/index.esm.js",
+  "main": "./dist/index.umd.cjs",
+  "module": "./dist/index.esm.js",
   "files": [
     "dist",
     "README.md",
     "LICENSE"
   ],
   "scripts": {
-    "build": "vite build"
+    "build": "vite build",
+    "prepublishOnly": "npm run build"
   },
   "keywords": [
     "gesture",

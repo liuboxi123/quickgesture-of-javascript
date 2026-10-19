@@ -48,7 +48,7 @@ export class qgAppCard extends HTMLElement {
           display: block;
           width: 100%;
           height: 100%;
-          border-radius: 12px;
+          over-flow: hidden;
         }
       </style>
       <div class="app-card">
@@ -71,7 +71,9 @@ export class qgAppCard extends HTMLElement {
         return;
       }
       if(newValue === 'true'){
+        
         elFoldAnimationExp(this);
+        
         setTimeout(()=>{ this._isUnfolded = false; },300);
         
         let iconEl = this.querySelector('[slot="icon"]');
@@ -88,7 +90,9 @@ export class qgAppCard extends HTMLElement {
         //   });
         // },300);
       }else{
+        
         elUnfoldAnimationExp(this);
+    
         this._isUnfolded = true;
       }
 

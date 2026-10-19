@@ -6,15 +6,12 @@ export default defineConfig({
         outDir: "dist",
         emptyOutDir: true,
         lib: {
-            entry: resolve(__dirname, "src/index.js"),
+            entry: resolve("src/index.js"),
             name: "QuickGesture",
             formats: ["es", "umd"],
-            fileName: (format) => {
-                if(format === 'es') return "index.esm.js";
-                return "index.js";
-            }
+            fileName: (format) => format === "es" ? "index.esm.js" : "index.umd.cjs",
         },
         sourcemap: false,
-        minify: "esbuild"
+        minify: false
     }
 });
