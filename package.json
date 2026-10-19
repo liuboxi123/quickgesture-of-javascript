@@ -1,6 +1,6 @@
 {
   "name": "@quickgesture/core",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "type": "module",
   "description": "A lightweight web gesture interaction component library",
   "main": "./dist/index.umd.cjs",
