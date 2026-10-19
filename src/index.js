@@ -36,3 +36,4 @@ export { qgLoader as Loader} from './components/Loader';
 export { qgBottomSheet as BottomSheet } from './components/BottomSheet';
 
 export * from './core/index-export';
+syntax error here
