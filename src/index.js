@@ -22,6 +22,10 @@ import './components/ImageVector';
 import './components/LeftSiderbar';
 import './components/Slider';
 import './components/VerticalRollingBox';
+import './components/Loader';
+import './components/BottomSheet';
+import './components/Glass2';
+import './components/ExpandingCard';
 
 export { qgAppCard as AppCard } from './components/AppCard';
 export { qgDraggbleElement as DraggbleElement } from './components/DraggbleElement';
@@ -34,5 +38,9 @@ export { qgSlider as Slider } from './components/Slider';
 export { qgVerticalRollingBox as VerticalRollingBox } from './components/VerticalRollingBox';
 export { qgLoader as Loader} from './components/Loader';
 export { qgBottomSheet as BottomSheet } from './components/BottomSheet';
+export { qgGlass2 as Glass2 } from './components/Glass2';
+export { qgExpandingCard as ExpandingCard } from './components/ExpandingCard';
 
 export * from './core/index-export';
+
+// qg-1069027654 is the CSS class name perfix of components

@@ -20,6 +20,9 @@ import { pinchInOrOutOfTwoFingersLisenterExp } from '../core/index-export.js';
 /**
  * app card
  */
+/**
+ * @deprecated 请使用<qg-expanding-card>代替
+ */
 export class qgAppCard extends HTMLElement {
   static get observedAttributes() {
     return ['height', 'width', 'fold'];

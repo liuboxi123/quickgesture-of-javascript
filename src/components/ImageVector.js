@@ -17,6 +17,7 @@ import { elUnfoldAnimationExp, elFoldAnimationExp } from '../core/index-export.j
 import { addEaseAnimationExp } from '../core/index-export.js';
 import { draggableElementExp } from '../core/index-export.js';
 import { pinchInOrOutOfTwoFingersLisenterExp } from '../core/index-export.js';
+import { qgGlass2 } from './Glass2.js';
 /**
  * image vector
  */
@@ -39,22 +40,22 @@ export class qgImageVector extends HTMLElement {
           display: block;
           overflow: hidden;
         }
-        #image-vector-content {
-          width: 100%;
-          height: 100%;
+        #qg-1069027654-image-vector-content {
+          width: 100vw;
+          height: 100vh;
           background-color: rgba(0, 0, 0, 0.7);
           display: flex;
           align-items: center;
           justify-content: center;
           position: relative;
         }
-        #image-vector-img {
+        #qg-1069027654-image-vector-img {
           width: 100%;
           height: 100%;
           object-fit: contain;
           pointer-events: none;
         }
-        #image-vector-preview {
+        #qg-1069027654-image-vector-preview {
           height: 100%;
           width: 100%;
           background-size: cover;
@@ -62,93 +63,73 @@ export class qgImageVector extends HTMLElement {
           background-repeat: no-repeat;
           background-color: #c6c6c6;
         }
-        #image-vector-drag-block{
+        #qg-1069027654-image-vector-drag-block{
           width: 100%;
           height: 100%;
           display: flex;
           align-items: center;
           justify-content: center;
         }
-        #app-card{
+        #qg-1069027654-app-card{
           width: 100%;
           height: 100%;
         }
-        #image-vector-top-bar{
-          width: 100%;
-          height: 10vh;
-          position: absolute;
-          top: 0;
-          left: 0;
-          display: none;
-          z-index: 9999999;
-          align-items: center;
-          justify-content: center;
-        }
-        #image-vector-bottom-bar{
-          width: 100%;
-          height: 10vh;
-          position: absolute;
-          bottom: 0;
-          left: 0;
-          display: none;
-          z-index: 9999999;
-          align-items: center;
-          justify-content: center;
-        }
-        .image-vector-btn{
-          background-color: rgba(255, 255, 255, 0.5);
-          backdrop-filter: blur(10px);                 
-          -webkit-backdrop-filter: blur(10px); 
-          width: min(10vw, 45px);
-          height: min(10vw, 45px);
+        .qg-1069027654-image-vector-btn{
+          width: min(10vw, 25px);
+          height: min(10vw, 25px);
           border-radius: 50%;
+          position: fixed;
+          padding: 5px;
+          top: 1%;
+          left: 1%;
+          z-index: 9999;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
         }
-        .image-vector-btn-top-island{
-          background-color: rgba(255, 255, 255, 0.5);
-          backdrop-filter: blur(10px);                 
-          -webkit-backdrop-filter: blur(10px); 
-          width: min(40vw, 100px);
-          height: min(10vw, 45px);
-          border-radius: 1000px;
-          margin-left: 10px;
+        .qg-1069027654-more-btn{
+          width: min(10vw, 25px);
+          height: min(10vw, 25px);
+          border-radius: 50%;
+          position: fixed;
+          padding: 5px;
+          top: 1%;
+          right: 1%;
+          z-index: 9999;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
         }
-        .image-vector-btn-bottom-island{
-          background-color: rgba(255, 255, 255, 0.5);
-          backdrop-filter: blur(10px);                 
-          -webkit-backdrop-filter: blur(10px); 
-          width: min(50vw, 150px);
-          height: min(10vw, 45px);
-          border-radius: 1000px;
-          margin-left: 10px;
+        .qg-1069027654-image-vector-btn-icon{
+          display: block;
+          width: 100%;
+          height: 100%;
+          color: rgb(252, 252, 252);
         }
-        .image-vector-back-icon{
-          color: rgba(66, 64, 64, 0.5);
-        }
+        
       </style>
 
-      <qg-app-card fold="true" id="app-card">
-        <div slot="icon" id="image-vector-preview"></div>
-        <div id="image-vector-content">
-          <div id="image-vector-top-bar">
-            <div class="image-vector-btn" id="image-vector-return-btn">
-              <svg class="image-vector-back-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
-                <path d="M15 19l-7-7 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </div>
-            <qg-horizontal-rolling-box class="image-vector-btn-top-island" id="image-vector-more-btn">
-              <slot name="image-vector-top-tools"></slot>
-            </qg-horizontal-rolling-box>
-          </div>
-          <div id="image-vector-bottom-bar">
-            <qg-horizontal-rolling-box class="image-vector-btn-bottom-island" id="image-vector-download-btn">
-              <slot name="image-vector-bottom-tools"></slot>
-            </qg-horizontal-rolling-box>
-          </div>
-          <div id="image-vector-drag-block">
-            <img src="" alt="" id="image-vector-img">
+      <qg-expanding-card id="qg-1069027654-app-card">
+        <div slot="icon" id="qg-1069027654-image-vector-preview"></div>
+        <div id="qg-1069027654-image-vector-content">
+          <qg-glass-2 class="qg-1069027654-image-vector-btn" id="qg-1069027654-image-vector-return-btn">
+            <svg class="qg-1069027654-image-vector-btn-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
+              <path d="M15 19l-7-7 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </qg-glass-2>
+          <qg-glass-2 class="qg-1069027654-more-btn">
+            <svg class="qg-1069027654-image-vector-btn-icon"
+             xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+              <circle cx="12" cy="5" r="1.75"/>
+              <circle cx="12" cy="12" r="1.75"/>
+              <circle cx="12" cy="19" r="1.75"/>
+            </svg>
+          </qg-glass-2>
+          <div id="qg-1069027654-image-vector-drag-block">
+            <img src="" alt="" id="qg-1069027654-image-vector-img">
           </div>
         </div>
-      </qg-app-card>
+      </qg-expanding-card>
     `;
     this._syncSrc();
     this._draggable();
@@ -156,33 +137,14 @@ export class qgImageVector extends HTMLElement {
     this._addFoldLisenter();
   }
   _initBtn(){
-    const returnBtn = this.shadowRoot.querySelector('#image-vector-return-btn');
-    this.shadowRoot.querySelector('#image-vector-download-btn');
-    const dragBlock = this.shadowRoot.querySelector('#image-vector-drag-block');
-    
+    const returnBtn = this.shadowRoot.querySelector('#qg-1069027654-image-vector-return-btn');
     returnBtn.addEventListener('click', () => {
-      const appCard = this.shadowRoot.querySelector('#app-card');
-      appCard.setAttribute('fold', 'true');
+      const appCard = this.shadowRoot.querySelector('#qg-1069027654-app-card');
+      appCard.collapse().then(() => {});
     });
   }
   _addFoldLisenter() {
-    const topBar = this.shadowRoot.querySelector('#image-vector-top-bar');
-    const bottomBar = this.shadowRoot.querySelector('#image-vector-bottom-bar');
-    const card = this.shadowRoot.querySelector('#app-card');
 
-    const isFolded = card.getAttribute('fold') === 'true';
-    topBar.style.display = isFolded ? 'none' : 'block';
-    bottomBar.style.display = isFolded ? 'none' : 'block';
-
-    card.addEventListener('foldchange', (e) => {
-      if (e.detail.fold) {
-        topBar.style.display = 'none';
-        bottomBar.style.display = 'none';
-      } else {
-        topBar.style.display = 'flex';
-        bottomBar.style.display = 'flex';
-      }
-    });
   }
   attributeChangedCallback(name, oldValue, newValue) {
     if (name === 'src' && oldValue !== newValue) {
@@ -191,8 +153,8 @@ export class qgImageVector extends HTMLElement {
   }
    _syncSrc() {
     const src = this.getAttribute('src');
-    const img = this.shadowRoot.querySelector('#image-vector-img');
-    const preview = this.shadowRoot.querySelector('#image-vector-preview');
+    const img = this.shadowRoot.querySelector('#qg-1069027654-image-vector-img');
+    const preview = this.shadowRoot.querySelector('#qg-1069027654-image-vector-preview');
     if (img) img.src = src || '';
     if (preview) {
       if(src){
@@ -203,7 +165,7 @@ export class qgImageVector extends HTMLElement {
     }
   }
   _draggable() {
-    const dragBlock = this.shadowRoot.querySelector('#image-vector-drag-block');
+    const dragBlock = this.shadowRoot.querySelector('#qg-1069027654-image-vector-drag-block');
     if (!dragBlock) return;
 
     let scale = 1;
@@ -243,7 +205,7 @@ export class qgImageVector extends HTMLElement {
       isDragging = true;
       startX = e.clientX - translateX;
       startY = e.clientY - translateY;
-      dragBlock.style.cursor = 'grabbing';
+
     });
 
     window.addEventListener('mousemove', (e) => {
@@ -256,7 +218,6 @@ export class qgImageVector extends HTMLElement {
     window.addEventListener('mouseup', () => {
       if (isDragging) {
         isDragging = false;
-        dragBlock.style.cursor = 'grab';
       }
     });
 
@@ -288,7 +249,6 @@ export class qgImageVector extends HTMLElement {
     });
 
     dragBlock.style.transformOrigin = 'center center';
-    dragBlock.style.cursor = 'grab';
     dragBlock.style.willChange = 'transform';
   }
   get src(){
