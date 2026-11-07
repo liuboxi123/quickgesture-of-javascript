@@ -22,7 +22,7 @@ const STYLES = `
     --glass-tint-alpha: 0.12;
     --glass-padding: 0px;
     --glass-shadow-strength: 1;
-    --glass-border-opacity: 1;
+    --glass-border-opacity: 0.4;
     --glass-noise-opacity: 0.25;
     --glass-noise-blend: overlay;
 
@@ -55,11 +55,11 @@ const STYLES = `
     padding: 1px;
     background: linear-gradient(
       135deg,
-      rgb(255 255 255 / 0.85) 0%,
-      rgb(255 255 255 / 0.20) 25%,
-      rgb(255 255 255 / 0.05) 50%,
-      rgb(255 255 255 / 0.20) 75%,
-      rgb(255 255 255 / 0.70) 100%
+      rgb(160 160 160 / 0.85) 0%,
+      rgb(140 140 140 / 0.35) 25%,
+      rgb(120 120 120 / 0.15) 50%,
+      rgb(140 140 140 / 0.35) 75%,
+      rgb(160 160 160 / 0.75) 100%
     );
     -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
             mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);

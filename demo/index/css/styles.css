@@ -460,28 +460,7 @@ html {
     height: 200px;
     width: 175px;
 }
-#image-vector-top-tools-container{
-    height: 100%;
-    width: 170px;
-}
-#image-vector-bottom-tools-container{
-    height: 100%;
-    width: 220px;
-}
-#image-vector-top-tools-container div{
-    height: 100%;
-    display: flex;
-    align-items: center;
-    padding-left: 10px;
-    float: left;
-}
-#image-vector-bottom-tools-container div{
-    height: 100%;
-    display: flex;
-    align-items: center;
-    padding-left: 10px;
-    float: left;
-}
+
 /* left siderbar */
 .left-siderbar{
     float: left;
@@ -536,3 +515,20 @@ qg-bottom-sheet .sheet-content {
     background-color: #d5d5d5;
     border-radius: 12px;
 }
+/* input */
+.qg-input{
+    height: 25px;
+    width: 150px;
+    padding: 10px;
+    border-radius: 1000px;
+
+
+}
+/* button */
+
+/* textarea */
+.c-textarea{
+    background-color: #ccc;
+}
+
+/*  */

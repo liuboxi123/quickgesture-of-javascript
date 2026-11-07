@@ -40,6 +40,9 @@ export { qgLoader as Loader} from './components/Loader';
 export { qgBottomSheet as BottomSheet } from './components/BottomSheet';
 export { qgGlass2 as Glass2 } from './components/Glass2';
 export { qgExpandingCard as ExpandingCard } from './components/ExpandingCard';
+export { qgInput as Input } from './components/Input';
+export { qgButton as Button } from './components/Button';
+export { qgSelected as Selected } from './components/Selected';
 
 export * from './core/index-export';
 

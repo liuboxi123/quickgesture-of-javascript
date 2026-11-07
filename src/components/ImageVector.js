@@ -81,20 +81,19 @@ export class qgImageVector extends HTMLElement {
           position: fixed;
           padding: 5px;
           top: 1%;
-          left: 1%;
+          right: 1%;
           z-index: 9999;
           display: inline-flex;
           align-items: center;
           justify-content: center;
         }
         .qg-1069027654-more-btn{
-          width: min(10vw, 25px);
-          height: min(10vw, 25px);
+          width:  calc(min(10vw, 25px) + 10px);
+          height: calc(min(10vw, 25px) + 10px);
           border-radius: 50%;
           position: fixed;
-          padding: 5px;
           top: 1%;
-          right: 1%;
+          left: 1%;
           z-index: 9999;
           display: inline-flex;
           align-items: center;
@@ -106,7 +105,15 @@ export class qgImageVector extends HTMLElement {
           height: 100%;
           color: rgb(252, 252, 252);
         }
-        
+        .qg-1069027654-btn-icon-wrap{
+          width: 100%;
+          height: 100%;
+          box-sizing: border-box;
+          padding: 5px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
       </style>
 
       <qg-expanding-card id="qg-1069027654-app-card">
@@ -117,14 +124,17 @@ export class qgImageVector extends HTMLElement {
               <path d="M15 19l-7-7 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
           </qg-glass-2>
-          <qg-glass-2 class="qg-1069027654-more-btn">
-            <svg class="qg-1069027654-image-vector-btn-icon"
-             xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-              <circle cx="12" cy="5" r="1.75"/>
-              <circle cx="12" cy="12" r="1.75"/>
-              <circle cx="12" cy="19" r="1.75"/>
-            </svg>
-          </qg-glass-2>
+          <qg-selected class="qg-1069027654-more-btn">
+            <div class="qg-1069027654-btn-icon-wrap">
+              <svg class="qg-1069027654-image-vector-btn-icon"
+              xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                <circle cx="12" cy="5" r="1.75"/>
+                <circle cx="12" cy="12" r="1.75"/>
+                <circle cx="12" cy="19" r="1.75"/>
+              </svg>
+            </div>
+            
+          </qg-selected>
           <div id="qg-1069027654-image-vector-drag-block">
             <img src="" alt="" id="qg-1069027654-image-vector-img">
           </div>
@@ -134,7 +144,32 @@ export class qgImageVector extends HTMLElement {
     this._syncSrc();
     this._draggable();
     this._initBtn();
+    this._syncMoreOptions();
     this._addFoldLisenter();
+    this._optionsObserver = new MutationObserver(() => this._syncMoreOptions());
+    this._optionsObserver.observe(this, {
+      childList: true,
+      subtree: true,
+      attributes: true,                  // value / disabled 变了也同步
+      attributeFilter: ['value', 'disabled', 'slot'],
+    });
+  }
+  _syncMoreOptions() {
+    const qgSel = this.shadowRoot.querySelector('.qg-1069027654-more-btn');
+    if (!qgSel) return;
+
+    // 清掉上一轮同步进来的（只删我们自己加的，不动使用者原有的）
+    qgSel.querySelectorAll('[slot="option"][data-synced]').forEach(el => el.remove());
+
+    const userOptions = this.querySelectorAll(':scope > [slot="option"]');
+
+    // 有外部指定 → 克隆到 qg-selected 里
+    userOptions.forEach(opt => {
+      const clone = opt.cloneNode(true);
+      clone.setAttribute('slot', 'option');
+      clone.setAttribute('data-synced', '');
+      qgSel.appendChild(clone);
+    });
   }
   _initBtn(){
     const returnBtn = this.shadowRoot.querySelector('#qg-1069027654-image-vector-return-btn');

@@ -132,10 +132,12 @@
         </qg-slider>
       </div>
       <div class="component">
-        <qg-image-vector src="../../resources/img/example-img.png" id="image-vector">
-          <div slot="image-vector-top-tools" id="image-vector-top-tools-container">
-            
-          </div>
+        <qg-image-vector src="" id="image-vector">
+          <qg-glass-2 slot="option" style="margin:4px 0; padding:6px 10px;border-radius: 12px;">
+            <div class="image-vector-item">下载</div>
+            <div class="image-vector-item">分享</div>
+            <div class="image-vector-item">删除</div>
+          </qg-glass-2>
         </qg-image-vector>
       </div>
       <div class="component"">
@@ -193,6 +195,26 @@
         </qg-glass-2>
       </div>
       
+      <div class="component">
+        <qg-input class="qg-input" style="" placeholder="请输入文字">
+          <!-- <span slot="prefix">👤</span> -->
+        </qg-input>
+      </div>
+      <div class="component">
+        <qg-button onclick="console.log('click')">
+          按钮
+        </qg-button>
+      </div>
+      <div class="component">
+        <qg-textarea placeholder="请输入文字" class="c-textarea"></qg-textarea>
+      </div>
+      <div class="component">
+        <qg-selected>
+          <div>下拉选择框</div>
+          <qg-glass-2 slot="option">列表一</qg-glass-2>
+          <qg-glass-2 slot="option">列表二</qg-glass-2>
+        </qg-selected>
+      </div>
     <div class="bottombar"></div>
   </div>
 </body>
@@ -211,6 +233,10 @@
     <script type="module" src="../../../src/components/BottomSheet.js"></script>
     <script type="module" src="../../../src/components/Glass2.js"></script>
     <script type="module" src="../../../src/components/ExpandingCard.js"></script>
+    <script type="module" src="../../../src/components/Input.js"></script>
+    <script type="module" src="../../../src/components/Button.js"></script>
+    <script type="module" src="../../../src/components/Textarea.js"></script>
+    <script type="module" src="../../../src/components/Selected.js"></script>
     <script type="module">
       import '../../../src/components/BottomSheet.js';
       
