@@ -12,11 +12,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. 
  */
-import { gestureListenerExp, isKeyDownExp, wheelLisenterExp } from '../core/index-export.js';
-import { elUnfoldAnimationExp, elFoldAnimationExp } from '../core/index-export.js';
-import { addEaseAnimationExp } from '../core/index-export.js';
-import { draggableElementExp } from '../core/index-export.js';
-import { pinchInOrOutOfTwoFingersLisenterExp } from '../core/index-export.js';
 /**
  * Ground glass 
  */
@@ -30,13 +25,8 @@ export class qgGroundGlass extends HTMLElement {
             :host {
                 display: block;
                 position: relative;
-                border-radius: 20px;
-                width: 300px;
-                height: 200px;
                 --qg-glass-bg: rgba(255, 255, 255, 0.08);
-                --qg-glass-border: rgba(255, 255, 255, 0.2);
                 --qg-glass-highlight: rgba(255, 255, 255, 0.35);
-                --qg-glass-shadow: rgba(0, 0, 0, 0.25);
                 --qg-liquid-speed: 8s;
                 --qg-radius: inherit;
             }
@@ -50,11 +40,6 @@ export class qgGroundGlass extends HTMLElement {
                 backdrop-filter: blur(24px) saturate(1.4);
                 -webkit-backdrop-filter: blur(24px) saturate(1.4);
                 border: 1px solid var(--qg-glass-border);
-                box-shadow:
-                    0 8px 32px rgba(0, 0, 0, 0.3),
-                    0 2px 8px rgba(0, 0, 0, 0.2),
-                    inset 0 1px 0 rgba(255, 255, 255, 0.25),
-                    inset 0 -1px 0 rgba(255, 255, 255, 0.05);
                 overflow: hidden;
                 z-index: 1;
             }

@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. 
  */
-import { attachPressGlowExp, pressFeedbackExp } from "../../../src/core/index-export.js";
+import { attachPressGlowExp, pressFeedbackExp, showConfirmExp } from "../../../src/core/index-export.js";
 // first page control 
 document.getElementById('git-link-btn').addEventListener('click', () => {
     window.open("https://github.com/liuboxi123/quickgesture-of-javascript.git", "_blank");
@@ -49,4 +49,30 @@ document.getElementById('close-bottom-sheet-btn').addEventListener('click',()=>{
     console.log('click close btn');
     const sheet = document.querySelector('qg-bottom-sheet');
     sheet.isShow = false;
+});
+showConfirmExp({
+  type: 'warning',
+  container: document.body, // 必须有！
+  duration: 0,                                          // 确认框必须不自动关
+  content: ({ close }) => {
+    const box = document.createElement('div');
+    box.className = 'confirm-box';
+    box.innerHTML = `
+      <p>确定要删除这条记录吗？</p>
+      <div class="confirm-actions">
+        <button data-role="ok">确定</button>
+        <button data-role="cancel">取消</button>
+      </div>
+    `;
+    box.addEventListener('click', (e) => {
+      const role = e.target.dataset.role;
+      if (role === 'ok') { console.log('用户点了确定'); close(); }
+      if (role === 'cancel') close();
+    });
+    // 返回 { el, destroy }，close 时会调 destroy
+    return {
+      el: box,
+      destroy() { /* 这里清理监听/定时器，见下文 */ },
+    };
+  },
 });

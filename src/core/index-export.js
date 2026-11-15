@@ -685,7 +685,7 @@ export function setGridPositionExp(el, row, col, rowSpan = 1, colSpan = 1) {
 
 /**
  * Check element is draged now
- * @param {HTEMLElemtne} el element
+ * @param {HTMLElement} el element
  * @param {() => {}} callback fun
  */
 export function dragListenerExp(el, callback){
@@ -760,7 +760,7 @@ export function cancelListenerExp(el, callback) {
 
 /**
  * Element spring transition animation 
- * @param {HTEMLElemtne} el element
+ * @param {HTMLElement} el element
  * @param {string} startCSSClassName start element css style
  * @param {string} endCSSClassName finish element css style
  * @param {number} duration duration of anmation (ms)
@@ -1337,7 +1337,7 @@ export function draggableElementExp(el, scale) {
 
 /**
  * Checking user pinch action of double fingers and scale the element
- * @param {HTMLelement} el element
+ * @param {HTMLElement} el element
  */
 export function pinchInOrOutOfTwoFingersLisenterExp(el){
 
@@ -1406,3 +1406,97 @@ export function isKeyDownExp(key){
     return false;
   });
 }
+/**
+ * Show confirm windows and you can customized by yourself
+ * @param {Object} opts
+ */
+export function showConfirmExp(opts) {
+  const el = document.createElement('div');
+  el.className = `tip tip--${opts.type}`;
+
+  let destroy = () => {};   // 内容自带的清理函数
+
+  // ---------- 内容渲染：支持 函数 / Node / HTML / 文本 ----------
+  const content = opts.content;
+  if (typeof content === 'function') {
+    const ctx = { close };                        // 把 close 交给内容用
+    const result = content(ctx);
+    if (result instanceof Node) {
+      el.appendChild(result);
+    } else if (result && result.el) {
+      el.appendChild(result.el);
+      destroy = result.destroy || (() => {});
+    }
+  } else if (content instanceof Node) {
+    el.appendChild(content);
+  } else if (opts.html) {
+    el.innerHTML = content;
+  } else {
+    el.textContent = String(content ?? '');
+  }
+
+  const container = typeof opts.container === 'function'
+    ? opts.container() : opts.container;
+  container.appendChild(el);
+
+  let timer = null;
+  let closed = false;
+  function close() {
+    if (closed) return;
+    closed = true;
+    clearTimeout(timer);
+    destroy();               // ← 内容先清理自己的监听/定时器/订阅
+    opts.onClose?.();
+    el.remove();
+  }
+
+  if (opts.duration > 0) timer = setTimeout(close, opts.duration);
+  if (opts.closable) el.addEventListener('click', close);
+
+  opts.onMount?.(el, { close });   // 挂载后钩子
+  return { el, close };
+}
+// using example
+// showConfirm({
+//   duration: 0,                    // 交互内容必须手动关
+//   type: 'info',
+//   content: ({ close }) => {
+//     const wrap = document.createElement('div');
+//     wrap.className = 'my-tip-body';
+//     wrap.innerHTML = `
+//       <p class="my-tip-title">确认提交订单？</p>
+//       <div class="my-tip-actions">
+//         <button class="btn btn-primary" data-role="ok">提交</button>
+//         <button class="btn" data-role="cancel">取消</button>
+//       </div>
+//     `;
+
+//     const onClick = async (e) => {
+//       const role = e.target.dataset.role;
+//       if (role === 'cancel') return close();
+//       if (role === 'ok') {
+//         const btn = e.target;
+//         btn.disabled = true;
+//         btn.textContent = '提交中…';
+//         try {
+//           await submitOrder();
+//           close();
+//           showTip('提交成功', { type: 'success' });
+//         } catch {
+//           btn.disabled = false;
+//           btn.textContent = '提交';
+//           showTip('提交失败', { type: 'error' });
+//         }
+//       }
+//     };
+//     wrap.addEventListener('click', onClick);
+
+//     // 返回清理函数，close 时自动执行
+//     return {
+//       el: wrap,
+//       destroy() {
+//         wrap.removeEventListener('click', onClick);
+//       },
+//     };
+//   },
+// });

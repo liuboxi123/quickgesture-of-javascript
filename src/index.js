@@ -43,6 +43,7 @@ export { qgExpandingCard as ExpandingCard } from './components/ExpandingCard';
 export { qgInput as Input } from './components/Input';
 export { qgButton as Button } from './components/Button';
 export { qgSelected as Selected } from './components/Selected';
+export { qgSwitch as Switch } from './components/Switch';
 
 export * from './core/index-export';
 

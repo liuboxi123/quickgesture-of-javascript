@@ -32,14 +32,13 @@ A Web Component Library for Gesture Interaction with Comprehensive Gesture Recog
 
 ```text
 QuickGesture
-├─image
 └─src
    └─main
-       ├─core
-       └─demo
+       ├─components
+       └─core
 ```
 - core: Core files
-- demo: Example code and pages
+- components: Components files
 
 ##  Fast satrt
 
@@ -51,6 +50,10 @@ QuickGesture
 <script src="../your/project/path/components.js"></script>
 <!-- gesture apis -->
 <script src="../your/project/path/index.js"></script>
+```
+```bash
+# npm import
+npm install @quickgesture/core
 ```
 
 ##  Examples
@@ -89,11 +92,11 @@ checkTwoFingersSlideDownwardEvent(el, (e) => { /* response */ }, 0.1, true);
 - Liquid Glass 
 
 ```html
-<qg-liquid-glass>
+<qg-ground-glass>
     <div>
-        <small>liquid glass</small>
+        <!-- <small>glass</small> -->
     </div>
-</qg-liquid-glass>
+</qg-ground-glass>
 ```
 
 - Grid Layout
